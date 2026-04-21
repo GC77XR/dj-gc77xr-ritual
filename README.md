@@ -27,3 +27,4 @@ A mobile-first daily ritual web experience for DJ GC77XR.
 - CODA = Conscious Observance and Daily Acceptance
 - Indigo = quiet state
 - Gold fire = activation state
+© 2026 MICRO HOUSE. Developed by DJ GC77XR.
