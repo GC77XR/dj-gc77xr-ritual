@@ -9,6 +9,8 @@ const giftDialog = document.getElementById('giftDialog');
 const mainCard = document.getElementById('mainCard');
 const completionScreen = document.getElementById('completionScreen');
 const circleShell = document.getElementById('circleShell');
+const completionImage = document.getElementById('completionImage');
+const heroImage = document.getElementById('heroImage');
 
 let active = false;
 let start = 0;
@@ -19,6 +21,7 @@ let points = Number(localStorage.getItem('sata_coda_points') || 0);
 
 const DURATION = 11 * 60 * 1000;
 const SWITCH_AT = 5.5 * 60 * 1000;
+const FADE_IN_END = 18 * 1000;
 
 function ensureAudio() {
   if (audioCtx) return;
@@ -84,8 +87,8 @@ function pulseBeat() {
   const now = audioCtx.currentTime;
   master.gain.cancelScheduledValues(now);
   master.gain.setValueAtTime(0.0001, now);
-  master.gain.exponentialRampToValueAtTime(0.035, now + 0.04);
-  master.gain.exponentialRampToValueAtTime(0.012, now + 0.18);
+  master.gain.exponentialRampToValueAtTime(0.03, now + 0.04);
+  master.gain.exponentialRampToValueAtTime(0.010, now + 0.18);
   setTimeout(pulseBeat, 508);
 }
 
@@ -114,26 +117,58 @@ function updateNoiseMix(elapsed) {
   }
 }
 
+function updatePhaseBackground(elapsed) {
+  const t = Math.min(1, elapsed / DURATION);
+  if (t < 0.5) {
+    document.body.classList.add('phase-sata');
+    document.body.classList.remove('phase-coda');
+  } else {
+    document.body.classList.add('phase-coda');
+    document.body.classList.remove('phase-sata');
+  }
+}
+
+function updateCircleAndTimer(elapsed, remaining, pct) {
+  const t = pct / 100;
+  const indigo = [75, 91, 220];
+  const gold = [245, 197, 66];
+  const mixed = blendColor(indigo, gold, t);
+  meter.style.width = `${pct}%`;
+  meter.style.background = `linear-gradient(90deg, ${blendColor(indigo, indigo, t)}, ${blendColor(indigo, gold, t)})`;
+  circle.style.background = `radial-gradient(circle at 50% 50%, rgba(255,255,255,0.20), transparent 18%), radial-gradient(circle at 35% 35%, rgba(255,255,255,0.14), transparent 40%), radial-gradient(circle at 50% 50%, ${blendColor([75,91,220,0.5], [245,197,66,0.5], t)}, ${blendColor([75,91,220,0.98], [245,197,66,0.98], t)})`;
+  circle.style.boxShadow = `inset 0 10px 24px rgba(255,255,255,0.16), inset 0 -18px 28px rgba(0,0,0,0.24), 0 0 0 12px ${blendColor([75,91,220,0.10], [245,197,66,0.10], t)}, 0 0 0 24px ${blendColor([75,91,220,0.06], [245,197,66,0.06], t)}, 0 0 0 40px ${blendColor([75,91,220,0.03], [245,197,66,0.03], t)}, 0 0 60px ${blendColor([75,91,220,0.42], [245,197,66,0.42], t)}`;
+  timerText.textContent = format(remaining);
+  timerText.style.color = mixed;
+  status.textContent = remaining > 0 ? 'Calming the mind. Observe the signal.' : 'Experience complete. Return to stillness.';
+}
+
 function finishExperience() {
   active = false;
-  document.body.classList.remove('coda');
   clearInterval(tick);
   if (master) master.gain.setTargetAtTime(0.0001, audioCtx.currentTime, 0.03);
-  if (toneOsc) toneOsc.stop?.();
-  if (lfo) lfo.stop?.();
-  if (bufferSrc) bufferSrc.stop?.();
-  if (pinkNode) pinkNode.disconnect();
+  setTimeout(() => {
+    try {
+      toneOsc.stop();
+      lfo.stop();
+      bufferSrc.stop();
+      pinkNode.disconnect();
+    } catch (e) {}
+  }, 80);
   points += 10;
   streak += 1;
   saveRewards();
-  circle.classList.remove('core-pulse');
+  circle.classList.remove('pulse');
   timerText.classList.remove('timer-pulse');
   circleShell.classList.add('hidden');
   mainCard.querySelector('.rewards').style.display = 'none';
   mainCard.querySelector('.guides').style.display = 'none';
   mainCard.querySelector('.disclaimer').style.display = 'none';
   status.textContent = 'SATA-CODA calibration is completed.';
-  if (dialog && !dialog.open) dialog.showModal();
+  if (dialog && !dialog.open) {
+    completionImage.classList.remove('show');
+    dialog.showModal();
+    requestAnimationFrame(() => completionImage.classList.add('show'));
+  }
   if (streak > 0 && streak % 77 === 0 && giftDialog && !giftDialog.open) giftDialog.showModal();
 }
 
@@ -141,39 +176,37 @@ function update() {
   const elapsed = Date.now() - start;
   const remaining = Math.max(0, DURATION - elapsed);
   const pct = Math.min(100, (elapsed / DURATION) * 100);
-  const t = pct / 100;
-  const indigo = [75, 91, 220];
-  const gold = [245, 197, 66];
-  const mixed = blendColor(indigo, gold, t);
-
+  updatePhaseBackground(elapsed);
   updateNoiseMix(elapsed);
-  meter.style.width = `${pct}%`;
-  meter.style.background = `linear-gradient(90deg, ${blendColor(indigo, indigo, t)}, ${blendColor(indigo, gold, t)})`;
-  circle.style.background = `radial-gradient(circle at 50% 50%, rgba(255,255,255,0.20), transparent 18%), radial-gradient(circle at 35% 35%, rgba(255,255,255,0.14), transparent 40%), radial-gradient(circle at 50% 50%, ${blendColor([75,91,220,0.5], [245,197,66,0.5], t)}, ${blendColor([75,91,220,0.98], [245,197,66,0.98], t)})`;
-  circle.style.boxShadow = `inset 0 10px 24px rgba(255,255,255,0.16), inset 0 -18px 28px rgba(0,0,0,0.24), 0 0 0 14px ${blendColor([75,91,220,0.12], [245,197,66,0.14], t)}, 0 0 0 28px ${blendColor([75,91,220,0.06], [245,197,66,0.07], t)}, 0 0 60px ${blendColor([75,91,220,0.48], [245,197,66,0.5], t)}`;
-  timerText.textContent = format(remaining);
-  timerText.style.color = mixed;
-  status.textContent = remaining > 0 ? 'Calming the mind. Observe the signal.' : 'Experience complete. Return to stillness.';
+  updateCircleAndTimer(elapsed, remaining, pct);
 
-  if (remaining <= 0 && active) finishExperience();
+  if (remaining <= 0 && active) {
+    finishExperience();
+  }
+
+  if (!active && elapsed >= DURATION - FADE_IN_END && elapsed < DURATION) {
+    heroImage.classList.add('show');
+  }
 }
 
 function startExperience() {
   active = true;
-  document.body.classList.add('coda');
+  document.body.classList.add('phase-sata');
+  document.body.classList.remove('phase-coda');
   status.textContent = 'Calming the mind. Observe the signal.';
   start = Date.now();
   ensureAudio();
   if (audioCtx?.state === 'suspended') audioCtx.resume();
-  circle.classList.add('core-pulse');
+  circle.classList.add('pulse');
   timerText.classList.add('timer-pulse');
   pulseBeat();
   clearInterval(tick);
-  tick = setInterval(update, 120);
+  tick = setInterval(update, 100);
   update();
 }
 
 startBtn.addEventListener('click', startExperience);
+
 backBtn.addEventListener('click', () => {
   completionScreen.classList.remove('show');
   completionScreen.classList.add('hidden');
@@ -182,10 +215,13 @@ backBtn.addEventListener('click', () => {
   mainCard.querySelector('.rewards').style.display = 'grid';
   mainCard.querySelector('.guides').style.display = 'grid';
   mainCard.querySelector('.disclaimer').style.display = 'block';
+  heroImage.classList.remove('show');
   status.textContent = 'Ready. Press START HERE.';
   timerText.textContent = '11:00';
   meter.style.width = '0%';
   meter.style.background = 'linear-gradient(90deg, var(--indigo), var(--gold))';
+  document.body.classList.add('phase-sata');
+  document.body.classList.remove('phase-coda');
 });
 
 circle.addEventListener('pointermove', (e) => {
@@ -194,18 +230,27 @@ circle.addEventListener('pointermove', (e) => {
   const y = e.clientY - rect.top - rect.height / 2;
   const distance = Math.min(Math.sqrt(x * x + y * y), rect.width / 2);
   const pct = Math.round((distance / (rect.width / 2)) * 100);
-  document.documentElement.style.setProperty('--p', pct);
   circle.style.transform = `rotateX(${16 - pct / 18}deg) rotateY(${pct / 20 - 18}deg) scale(${1 + pct / 800})`;
 });
 
-circle.addEventListener('pointerleave', () => { circle.style.transform = 'rotateX(16deg) rotateY(-18deg)'; });
+circle.addEventListener('pointerleave', () => {
+  circle.style.transform = 'rotateX(16deg) rotateY(-18deg)';
+});
+
 circle.addEventListener('pointerdown', (e) => circle.setPointerCapture(e.pointerId));
 
 dialog?.addEventListener('close', () => {
   mainCard.style.display = 'none';
   completionScreen.classList.add('show');
   completionScreen.classList.remove('hidden');
-  status.textContent = 'Completed.';
+  completionScreen.innerHTML = `
+    <img src="micro_haus_end.jpeg" alt="Micro Haus end image" class="hero-image show" />
+    <div class="end-note">Micro Haus end image fades in during the last 18 seconds of the practice.</div>
+    <div class="back-row">
+      <button id="backBtn2" class="start-btn">Back to SATA-CODA 11-minute protocol practice</button>
+    </div>
+  `;
+  document.getElementById('backBtn2').addEventListener('click', () => window.location.reload());
 });
 
 update();
