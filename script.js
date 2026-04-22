@@ -7,7 +7,7 @@ const timerText = document.getElementById('timerText');
 let active = false;
 let start = 0;
 let tick = null;
-let audioCtx, master, modOsc, modGain, toneOsc;
+let audioCtx, master, toneOsc, filter, lfo, lfoGain;
 
 const DURATION = 11 * 60 * 1000;
 
@@ -15,42 +15,38 @@ function ensureAudio() {
   if (audioCtx) return;
   const Ctx = window.AudioContext || window.webkitAudioContext;
   if (!Ctx) return;
-
   audioCtx = new Ctx();
   master = audioCtx.createGain();
+  filter = audioCtx.createBiquadFilter();
+  toneOsc = audioCtx.createOscillator();
+  lfo = audioCtx.createOscillator();
+  lfoGain = audioCtx.createGain();
+
+  toneOsc.type = 'sine';
+  toneOsc.frequency.value = 118;
+  filter.type = 'lowpass';
+  filter.frequency.value = 520;
+  filter.Q.value = 0.8;
   master.gain.value = 0.0001;
 
-  modOsc = audioCtx.createOscillator();
-  modGain = audioCtx.createGain();
-  toneOsc = audioCtx.createOscillator();
+  lfo.type = 'sine';
+  lfo.frequency.value = 1.96;
+  lfoGain.gain.value = 44;
+  lfo.connect(lfoGain).connect(filter.frequency);
+  toneOsc.connect(filter).connect(master).connect(audioCtx.destination);
 
-  modOsc.type = 'sine';
-  toneOsc.type = 'sine';
-
-  modOsc.frequency.value = 0.08;
-  modGain.gain.value = 0.012;
-  toneOsc.frequency.value = 118;
-
-  modOsc.connect(modGain).connect(master.gain);
-  toneOsc.connect(master).connect(audioCtx.destination);
-
-  modOsc.start();
   toneOsc.start();
+  lfo.start();
 }
 
-function pulseShape() {
+function pulseBeat() {
   if (!audioCtx || !master || !active) return;
-
   const now = audioCtx.currentTime;
-  const soft = 0.012;
-  const wave = 0.018;
-
   master.gain.cancelScheduledValues(now);
   master.gain.setValueAtTime(0.0001, now);
-  master.gain.exponentialRampToValueAtTime(soft + wave, now + 0.08);
-  master.gain.exponentialRampToValueAtTime(soft, now + 0.26);
-
-  setTimeout(pulseShape, 510);
+  master.gain.exponentialRampToValueAtTime(0.055, now + 0.06);
+  master.gain.exponentialRampToValueAtTime(0.012, now + 0.20);
+  setTimeout(pulseBeat, 508);
 }
 
 function format(ms) {
@@ -64,17 +60,15 @@ function update() {
   const elapsed = Date.now() - start;
   const remaining = Math.max(0, DURATION - elapsed);
   const pct = Math.min(100, (elapsed / DURATION) * 100);
-
   document.documentElement.style.setProperty('--p', pct.toFixed(2));
   meter.style.width = `${pct}%`;
   timerText.textContent = format(remaining);
-
   if (active) status.textContent = remaining > 0 ? 'Calming the mind. Observe the signal.' : 'Experience complete. Return to stillness.';
-
   if (remaining <= 0 && active) {
     active = false;
     document.body.classList.remove('coda');
     label.textContent = 'SATA';
+    status.textContent = 'Quiet indigo state. Tap to begin.';
     clearInterval(tick);
     if (master) master.gain.setTargetAtTime(0.0001, audioCtx.currentTime, 0.03);
   }
@@ -86,11 +80,9 @@ function startExperience() {
   label.textContent = 'CODA';
   status.textContent = 'Calming the mind. Observe the signal.';
   start = Date.now();
-
   ensureAudio();
   if (audioCtx?.state === 'suspended') audioCtx.resume();
-
-  pulseShape();
+  pulseBeat();
   clearInterval(tick);
   tick = setInterval(update, 250);
   update();
