@@ -1,4 +1,4 @@
-<<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -28,6 +28,13 @@
 
       <button id="startBtn" class="start-btn">START HERE</button>
 
+      <div class="rewards">
+        <div class="reward-pill">1 session = 10 points</div>
+        <div class="reward-pill">7-day streak = silver</div>
+        <div class="reward-pill">30-day streak = gold</div>
+        <div class="reward-pill">77-day cycle = surprise gift</div>
+      </div>
+
       <div class="guides">
         <div><strong>1.</strong> Slow breathing.</div>
         <div><strong>2.</strong> Soft attention.</div>
@@ -42,7 +49,18 @@
       <p class="dialog-line">RESET-IGNITE-INTEGRATE</p>
       <p class="dialog-sign">DJ GC77XR</p>
       <form method="dialog">
-        <button class="dialog-btn" value="close">OK</button>
+        <button class="dialog-btn" value="close">Close</button>
+      </form>
+    </div>
+  </dialog>
+
+  <dialog id="giftDialog" class="completion-dialog">
+    <div class="dialog-card">
+      <p class="dialog-title">77-day cycle complete.</p>
+      <p class="dialog-line">A surprise gift from DJ GC77XR is ready.</p>
+      <p class="dialog-sign">Claim instructions can be sent by email.</p>
+      <form method="dialog">
+        <button class="dialog-btn" value="close">Close</button>
       </form>
     </div>
   </dialog>
