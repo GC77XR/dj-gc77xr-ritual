@@ -11,12 +11,12 @@
 </head>
 <body>
   <main class="stage">
-    <section class="card">
+    <section class="card" id="mainCard">
       <p class="eyebrow">NOS / SATA-CODA by DJ GC77XR</p>
-      <h1>Calm the mind. Focus the system.</h1>
+      <h1>RESET BODY-IGNITE MIND-INTEGRATE SOUL</h1>
       <p class="copy">Press START HERE to begin the 11-minute SATA Indigo → CODA Gold Yellow experience.</p>
 
-      <div class="circle-shell">
+      <div class="circle-shell" id="circleShell">
         <button id="ritualCircle" class="circle" aria-label="Interactive ritual circle"></button>
       </div>
 
@@ -38,17 +38,29 @@
       <div class="guides">
         <div><strong>1.</strong> Slow breathing.</div>
         <div><strong>2.</strong> Soft attention.</div>
-        <div><strong>3.</strong> Observe, then accept.</div>
+        <div><strong>3.</strong> Observe.</div>
       </div>
+
+      <div class="disclaimer">
+        <p><strong>Micro Haus Notice.</strong> This experience is for wellness and attention support only. It is not medical advice, diagnosis, treatment, or a cure. Use discretion if you are sensitive to sound, light, breathing exercises, or rhythmic visual effects.</p>
+        <p><strong>Privacy and Legal.</strong> By opting into reward emails, you consent to Micro Haus storing your email address, session progress, and reward eligibility for the SATA-CODA program. You may unsubscribe or update preferences at any time. We do not sell your personal information. If you received a reward message by mistake, please disregard it and contact support. This content is provided as-is without warranties of any kind.</p>
+        <p><strong>77-Day Reward.</strong> A 77-day completed cycle may unlock a surprise gift email only if you explicitly opted in.</p>
+      </div>
+    </section>
+
+    <section class="screen hidden" id="completionScreen">
+      <img src="micro_haus_end.jpeg" alt="Micro Haus end image" class="hero-image" />
+      <button id="backBtn" class="start-btn">Back to SATA-CODA 11 minute protocol practice</button>
     </section>
   </main>
 
   <dialog id="completionDialog" class="completion-dialog">
     <div class="dialog-card">
+      <img src="completion_image.jpeg" alt="Completion visual" class="dialog-image" />
       <p class="dialog-title">SATA-CODA calibration is completed.</p>
       <p class="dialog-line">RESET-IGNITE-INTEGRATE</p>
       <p class="dialog-sign">DJ GC77XR</p>
-      <form method="dialog">
+      <form method="dialog" id="closeForm">
         <button class="dialog-btn" value="close">Close</button>
       </form>
     </div>
