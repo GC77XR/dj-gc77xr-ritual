@@ -4,11 +4,14 @@ const meter = document.getElementById('meterFill');
 const status = document.getElementById('statusText');
 const timerText = document.getElementById('timerText');
 const dialog = document.getElementById('completionDialog');
+const giftDialog = document.getElementById('giftDialog');
 
 let active = false;
 let start = 0;
 let tick = null;
 let audioCtx, master, toneOsc, filter, lfo, lfoGain;
+let streak = Number(localStorage.getItem('sata_coda_streak') || 0);
+let points = Number(localStorage.getItem('sata_coda_points') || 0);
 
 const DURATION = 11 * 60 * 1000;
 
@@ -57,15 +60,31 @@ function format(ms) {
   return `${m}:${r}`;
 }
 
+function saveRewards() {
+  localStorage.setItem('sata_coda_streak', streak);
+  localStorage.setItem('sata_coda_points', points);
+}
+
+function blendColor(a, b, t) {
+  const c = x => Math.round(x);
+  return `rgb(${c(a[0] + (b[0] - a[0]) * t)}, ${c(a[1] + (b[1] - a[1]) * t)}, ${c(a[2] + (b[2] - a[2]) * t)})`;
+}
+
 function update() {
   const elapsed = Date.now() - start;
   const remaining = Math.max(0, DURATION - elapsed);
   const pct = Math.min(100, (elapsed / DURATION) * 100);
-  const blend = pct;
+  const t = pct / 100;
+  const indigo = [75, 91, 220];
+  const gold = [245, 197, 66];
+  const mixed = blendColor(indigo, gold, t);
 
   meter.style.width = `${pct}%`;
-  meter.style.background = `linear-gradient(90deg, rgb(${Math.round(75 + blend*1.7)}, ${Math.round(91 + blend*1.1)}, ${Math.round(220 - blend*1.2)}), rgb(${Math.round(245 - blend*0.2)}, ${Math.round(197 - blend*0.05)}, ${Math.round(66 + blend*0.2)}))`;
+  meter.style.background = `linear-gradient(90deg, ${blendColor(indigo, indigo, t)}, ${blendColor(indigo, gold, t)})`;
+  circle.style.background = `radial-gradient(circle at 50% 50%, rgba(255,255,255,0.20), transparent 18%), radial-gradient(circle at 35% 35%, rgba(255,255,255,0.14), transparent 40%), radial-gradient(circle at 50% 50%, ${blendColor([75,91,220,0.5], [245,197,66,0.5], t)}, ${blendColor([75,91,220,0.98], [245,197,66,0.98], t)})`;
+  circle.style.boxShadow = `inset 0 10px 24px rgba(255,255,255,0.16), inset 0 -18px 28px rgba(0,0,0,0.24), 0 0 0 14px ${blendColor([75,91,220,0.12], [245,197,66,0.14], t)}, 0 0 0 28px ${blendColor([75,91,220,0.06], [245,197,66,0.07], t)}, 0 0 60px ${blendColor([75,91,220,0.48], [245,197,66,0.5], t)}`;
   timerText.textContent = format(remaining);
+  timerText.style.color = mixed;
   status.textContent = remaining > 0 ? 'Calming the mind. Observe the signal.' : 'Experience complete. Return to stillness.';
 
   if (remaining <= 0 && active) {
@@ -74,7 +93,11 @@ function update() {
     status.textContent = 'SATA-CODA calibration is completed.';
     clearInterval(tick);
     if (master) master.gain.setTargetAtTime(0.0001, audioCtx.currentTime, 0.03);
+    points += 10;
+    streak += 1;
+    saveRewards();
     if (dialog && !dialog.open) dialog.showModal();
+    if (streak > 0 && streak % 77 === 0 && giftDialog && !giftDialog.open) giftDialog.showModal();
   }
 }
 
@@ -85,14 +108,15 @@ function startExperience() {
   start = Date.now();
   ensureAudio();
   if (audioCtx?.state === 'suspended') audioCtx.resume();
+  circle.classList.add('core-pulse');
+  timerText.classList.add('timer-pulse');
   pulseBeat();
   clearInterval(tick);
-  tick = setInterval(update, 250);
+  tick = setInterval(update, 120);
   update();
 }
 
 startBtn.addEventListener('click', startExperience);
-circle.addEventListener('click', () => {});
 
 circle.addEventListener('pointermove', (e) => {
   const rect = circle.getBoundingClientRect();
@@ -110,3 +134,4 @@ circle.addEventListener('pointerleave', () => {
 
 circle.addEventListener('pointerdown', (e) => circle.setPointerCapture(e.pointerId));
 update();
+
