@@ -1,9 +1,9 @@
-<!doctype html>
+<<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>NOS_ / SATA-CODA by DJ GC77XR</title>
+  <title>NOS / SATA-CODA by DJ GC77XR</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
@@ -12,23 +12,21 @@
 <body>
   <main class="stage">
     <section class="card">
-      <p class="eyebrow">NOS_ / SATA-CODA by DJ GC77XR</p>
+      <p class="eyebrow">NOS / SATA-CODA by DJ GC77XR</p>
       <h1>Calm the mind. Focus the system.</h1>
-      <p class="copy">SATA Indigo flows into CODA Gold Yellow for 11 minutes, with a circle pulse shaped like a heartbeat.</p>
+      <p class="copy">Press START HERE to begin the 11-minute SATA Indigo → CODA Gold Yellow experience.</p>
 
-      <button id="ritualCircle" class="circle" aria-label="SATA to CODA ritual circle">
-        <span class="pulse pulse-a"></span>
-        <span class="pulse pulse-b"></span>
-        <span class="circle-core"></span>
-        <span class="circle-ring"></span>
-        <span class="circle-label" id="circleLabel">SATA</span>
-      </button>
+      <div class="circle-shell">
+        <button id="ritualCircle" class="circle" aria-label="Interactive ritual circle"></button>
+      </div>
 
       <div class="meter"><div class="meter-fill" id="meterFill"></div></div>
       <div class="hud">
-        <p class="status" id="statusText">Quiet indigo state. Tap to begin.</p>
+        <p class="status" id="statusText">Ready. Press START HERE.</p>
         <p class="timer" id="timerText">11:00</p>
       </div>
+
+      <button id="startBtn" class="start-btn">START HERE</button>
 
       <div class="guides">
         <div><strong>1.</strong> Slow breathing.</div>
@@ -37,6 +35,18 @@
       </div>
     </section>
   </main>
+
+  <dialog id="completionDialog" class="completion-dialog">
+    <div class="dialog-card">
+      <p class="dialog-title">SATA-CODA calibration is completed.</p>
+      <p class="dialog-line">RESET-IGNITE-INTEGRATE</p>
+      <p class="dialog-sign">DJ GC77XR</p>
+      <form method="dialog">
+        <button class="dialog-btn" value="close">OK</button>
+      </form>
+    </div>
+  </dialog>
+
   <script src="script.js"></script>
 </body>
 </html>
