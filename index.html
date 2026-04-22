@@ -3,89 +3,33 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>DJ GC77XR — Daily Ritual</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <title>DJ GC77XR — Cognitive Ritual</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <canvas id="bg"></canvas>
-  <main class="app">
-    <section class="hero glass">
-      <div class="brand">DJ GC77XR</div>
-      <h1>SATA → CODA</h1>
-      <p class="subtitle">Daily ritual for calm, clarity, and conscious action</p>
-    </section>
+  <main class="stage">
+    <section class="card">
+      <p class="eyebrow">NOS // SATA → CODA</p>
+      <h1>Calm the mind. Focus the system.</h1>
+      <p class="copy">An 11-minute ritual that helps the user settle, observe, and activate with a steadier cognitive state.</p>
 
-    <section class="panel glass">
-      <div class="topline">
-        <div>
-          <div class="phase-label" id="phaseLabel">SATA</div>
-          <div class="phase-copy" id="phaseCopy">Sensory Attunement and Tranquility Activation</div>
-        </div>
-        <div class="chip" id="stateChip">QUIET</div>
+      <button id="ritualCircle" class="circle" aria-label="Interactive ritual circle">
+        <span class="circle-core"></span>
+        <span class="circle-ring"></span>
+        <span class="circle-label" id="circleLabel">SATA</span>
+      </button>
+
+      <div class="meter"><div class="meter-fill" id="meterFill"></div></div>
+      <div class="hud">
+        <p class="status" id="statusText">Quiet indigo state. Tap to begin.</p>
+        <p class="timer" id="timerText">11:00</p>
       </div>
 
-      <div class="orb-stage">
-        <div class="orb" id="orb"></div>
-        <div class="ring ring-1"></div>
-        <div class="ring ring-2"></div>
-        <div class="ring ring-3"></div>
+      <div class="guides">
+        <div><strong>1.</strong> Slow breathing.</div>
+        <div><strong>2.</strong> Soft attention.</div>
+        <div><strong>3.</strong> Observe, then accept.</div>
       </div>
-
-      <div class="instruction glass" id="instruction">Press Start Ritual to begin your daily transition.</div>
-
-      <div class="breath-grid">
-        <div class="breath-box"><span>Inhale</span><strong id="inhaleVal">4</strong></div>
-        <div class="breath-box"><span>Hold</span><strong id="holdVal">4</strong></div>
-        <div class="breath-box"><span>Exhale</span><strong id="exhaleVal">4</strong></div>
-        <div class="breath-box"><span>Observe</span><strong id="observeVal">4</strong></div>
-      </div>
-
-      <div class="metrics">
-        <div class="metric"><span>Tempo</span><strong>118 BPM</strong></div>
-        <div class="metric"><span>Frequency</span><strong id="freqValue">Indigo Field</strong></div>
-        <div class="metric"><span>Mode</span><strong id="modeValue">Settling</strong></div>
-      </div>
-
-      <div class="progress-wrap">
-        <div class="progress-labels"><span>SATA</span><span>CODA</span></div>
-        <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
-      </div>
-
-      <div class="quote" id="quote">Breathe. Observe. Settle.</div>
-    </section>
-
-    <section class="controls">
-      <button id="startBtn">Start Ritual</button>
-      <button id="soundBtn" class="secondary">Enable Sound</button>
-      <button id="checkinBtn" class="secondary">Check In</button>
-      <button id="resetBtn" class="secondary">Reset</button>
-    </section>
-
-    <section class="panel glass ritual-card">
-      <h2>Daily Flow</h2>
-      <ol>
-        <li>Pause and reduce external noise.</li>
-        <li>Enter SATA and settle into indigo calm.</li>
-        <li>Follow the breathing sequence.</li>
-        <li>Shift through 118 BPM into CODA.</li>
-        <li>Choose one action for the day.</li>
-      </ol>
-      <div class="daily-action" id="dailyAction">Today's action: breathe, focus, move.</div>
-    </section>
-
-    <section class="panel glass streak-card">
-      <h2>Daily Streak</h2>
-      <div class="streak-row">
-        <div class="streak-value" id="streakValue">0</div>
-        <div class="streak-meta">
-          <strong>days active</strong>
-          <span id="lastCheckin">No check-in yet today.</span>
-        </div>
-      </div>
-      <div class="streak-note">Tap Check In after completing your ritual to grow the streak.</div>
     </section>
   </main>
   <script src="script.js"></script>
