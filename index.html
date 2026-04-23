@@ -3,47 +3,33 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Micro Haus Experience V7</title>
+  <title>Micro Haus Experience</title>
   <link rel="stylesheet" href="style.css" />
+  <script defer src="script.js"></script>
 </head>
 <body>
-  <main class="experience">
-    <div class="ring-wrap" aria-label="Progress experience">
-      <svg class="ring-svg" viewBox="0 0 240 240" aria-hidden="true">
-        <defs>
-          <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stop-color="#4b8dff" />
-            <stop offset="100%" stop-color="#ffcc33" />
-          </linearGradient>
-        </defs>
-        <circle class="ring-track" cx="120" cy="120" r="102"></circle>
-        <circle class="ring-progress" cx="120" cy="120" r="102"></circle>
-      </svg>
+  <main class="app">
+    <section class="stage">
+      <div class="ring-shell">
+        <svg class="ring-svg" viewBox="0 0 240 240" aria-hidden="true">
+          <defs>
+            <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#4b8dff" />
+              <stop offset="100%" stop-color="#ffcc33" />
+            </linearGradient>
+          </defs>
+          <circle class="ring-track" cx="120" cy="120" r="102"></circle>
+          <circle class="ring-progress" cx="120" cy="120" r="102"></circle>
+        </svg>
 
-      <img
-        id="microHausImage"
-        class="micro-haus"
-        src="micro-haus.png"
-        alt="Micro Haus"
-      />
-    </div>
+        <img id="microHausImage" class="micro-haus" src="micro-haus.png" alt="Micro Haus" />
+      </div>
+    </section>
 
-    <div class="controls">
+    <section class="actions">
       <button id="startBtn" type="button">START HERE</button>
-
-      <a
-        id="giftLink"
-        class="gift disabled"
-        href="gift.html"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-disabled="true"
-      >
-        77-Day Gift
-      </a>
-    </div>
+      <a id="giftLink" class="gift disabled" href="#" aria-disabled="true">77-Day Gift</a>
+    </section>
   </main>
-
-  <script src="script.js"></script>
 </body>
 </html>
