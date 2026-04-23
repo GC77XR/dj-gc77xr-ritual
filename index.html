@@ -6,7 +6,46 @@
   <title>Micro Haus Experience</title>
   <link rel="stylesheet" href="style.css" />
   <script defer src="script.js"></script>
+</head><!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Micro Haus Experience V7.1</title>
+  " />
+  <script defer src="V7.1-script.js"></script>
 </head>
+<body>
+  <main class="app">
+    <section class="stage">
+      <div class="ring-shell">
+        <svg class="ring-svg" viewBox="0 0 240 240" aria-hidden="true">
+          <defs>
+            earGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#4b8dff" />
+              <stop offset="100%" stop-color="#ffcc33" />
+            </linearGradient>
+          </defs>
+          ircle class="ring-track" cx="120" cy="120" r="102"></circle>
+          ircle class="ring-progress" cx="120" cy="120" r="102"></circle>
+        </svg>
+
+        <img
+          id="microHausImage"
+          class="micro-haus"
+          src="micro-haus.png"
+          alt="Micro Haus"
+        />
+      </div>
+    </section>
+
+    <section class="actions">
+      <button id="startBtn" type="button">START HERE</button>
+      <a id="giftLink" class="gift disabled" href="#" aria-disabled="true">77-Day Gift</a>
+    </section>
+  </main>
+</body>
+</html>
 <body>
   <main class="app">
     <section class="stage">
