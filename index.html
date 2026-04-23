@@ -1,87 +1,48 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>NOS / SATA-CODA by DJ GC77XR</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Micro Haus Experience V7</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body class="phase-sata">
-  <main class="stage">
-    <section class="card" id="mainCard">
-      <p class="eyebrow">NOS / SATA-CODA by DJ GC77XR</p>
-      <h1>RESET BODY-IGNITE MIND-INTEGRATE SOUL</h1>
-      <p class="copy">Press START HERE to begin the 11-minute SATA Indigo → CODA Gold Yellow experience.</p>
+<body>
+  <main class="experience">
+    <div class="ring-wrap" aria-label="Progress experience">
+      <svg class="ring-svg" viewBox="0 0 240 240" aria-hidden="true">
+        <defs>
+          <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#4b8dff" />
+            <stop offset="100%" stop-color="#ffcc33" />
+          </linearGradient>
+        </defs>
+        <circle class="ring-track" cx="120" cy="120" r="102"></circle>
+        <circle class="ring-progress" cx="120" cy="120" r="102"></circle>
+      </svg>
 
-      <div class="circle-shell" id="circleShell">
-        <button id="ritualCircle" class="circle" aria-label="Interactive ritual circle">
-          <span class="ring r1"></span>
-          <span class="ring r2"></span>
-          <span class="ring r3"></span>
-        </button>
-      </div>
+      <img
+        id="microHausImage"
+        class="micro-haus"
+        src="micro-haus.png"
+        alt="Micro Haus"
+      />
+    </div>
 
-      <div class="meter"><div class="meter-fill" id="meterFill"></div></div>
-      <div class="hud">
-        <p class="status" id="statusText">Ready. Press START HERE.</p>
-        <p class="timer" id="timerText">11:00</p>
-      </div>
+    <div class="controls">
+      <button id="startBtn" type="button">START HERE</button>
 
-      <button id="startBtn" class="start-btn">START HERE</button>
-
-      <div class="rewards">
-        <div class="reward-pill">1 session = 10 points</div>
-        <div class="reward-pill">7-day streak = silver</div>
-        <div class="reward-pill">30-day streak = gold</div>
-        <div class="reward-pill">77-day cycle = surprise gift</div>
-      </div>
-
-      <div class="guides">
-        <div><strong>1.</strong> Slow breathing.</div>
-        <div><strong>2.</strong> Soft attention.</div>
-        <div><strong>3.</strong> Observe.</div>
-      </div>
-
-      <div class="disclaimer">
-        <p><strong>Micro Haus Notice.</strong> This experience is for general wellness and attention support only. It is not medical advice, diagnosis, treatment, or a substitute for professional care.</p>
-        <p><strong>Privacy and Legal.</strong> By opting into reward emails, you consent to Micro Haus storing your email address, session progress, and reward eligibility for program administration. You may unsubscribe or update preferences at any time. We do not sell personal information.</p>
-        <p><strong>77-Day Reward.</strong> A completed 77-day cycle may unlock a surprise gift email only if you explicitly opted in.</p>
-      </div>
-    </section>
-
-    <section class="screen hidden" id="completionScreen">
-      <img src="micro_haus_end.jpeg" alt="Micro Haus end image" class="hero-image" id="heroImage" />
-      <div class="back-row">
-        <button id="backBtn" class="start-btn">Back to SATA-CODA 11-minute protocol practice</button>
-      </div>
-    </section>
+      <a
+        id="giftLink"
+        class="gift disabled"
+        href="gift.html"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-disabled="true"
+      >
+        77-Day Gift
+      </a>
+    </div>
   </main>
-
-  <dialog id="completionDialog" class="completion-dialog">
-    <div class="dialog-card">
-      <img src="completion_image.jpeg" alt="Completion visual" class="dialog-image" id="completionImage" />
-      <p class="dialog-title">SATA-CODA calibration is completed.</p>
-      <p class="dialog-line">RESET-IGNITE-INTEGRATE</p>
-      <p class="dialog-sign">DJ GC77XR</p>
-      <form method="dialog" id="closeForm">
-        <button class="dialog-btn" value="close">Close</button>
-      </form>
-    </div>
-  </dialog>
-
-  <dialog id="giftDialog" class="completion-dialog">
-    <div class="dialog-card">
-      <p class="dialog-title">77-day cycle complete.</p>
-      <p class="dialog-line">A surprise gift from DJ GC77XR is ready.</p>
-      <p class="dialog-sign">Claim instructions can be sent by email.</p>
-      <form method="dialog">
-        <button class="dialog-btn" value="close">Close</button>
-      </form>
-    </div>
-  </dialog>
 
   <script src="script.js"></script>
 </body>
