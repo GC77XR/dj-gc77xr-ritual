@@ -1,74 +1,44 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Micro Haus Experience</title>
-  <link rel="stylesheet" href="style.css" />
-  <script defer src="script.js"></script>
-</head><!doctype html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Micro Haus Experience V7.1</title>
-  " />
-  <script defer src="V7.1-script.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>DJ GC77XR | Micro Haus</title>
+    >
 </head>
 <body>
-  <main class="app">
-    <section class="stage">
-      <div class="ring-shell">
-        <svg class="ring-svg" viewBox="0 0 240 240" aria-hidden="true">
-          <defs>
-            earGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stop-color="#4b8dff" />
-              <stop offset="100%" stop-color="#ffcc33" />
-            </linearGradient>
-          </defs>
-          ircle class="ring-track" cx="120" cy="120" r="102"></circle>
-          ircle class="ring-progress" cx="120" cy="120" r="102"></circle>
-        </svg>
+    anvas id="vesselCanvas"></canvas>
 
-        <img
-          id="microHausImage"
-          class="micro-haus"
-          src="micro-haus.png"
-          alt="Micro Haus"
-        />
-      </div>
-    </section>
+    <div id="hud" style="display: none;">
+        <div id="status-line">STATUS: CALIBRATING // <span id="timer">11:00</span> // <span id="percent">0</span>% COMPLETE</div>
+    </div>
 
-    <section class="actions">
-      <button id="startBtn" type="button">START HERE</button>
-      <a id="giftLink" class="gift disabled" href="#" aria-disabled="true">77-Day Gift</a>
-    </section>
-  </main>
-</body>
-</html>
-<body>
-  <main class="app">
-    <section class="stage">
-      <div class="ring-shell">
-        <svg class="ring-svg" viewBox="0 0 240 240" aria-hidden="true">
-          <defs>
-            <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stop-color="#4b8dff" />
-              <stop offset="100%" stop-color="#ffcc33" />
-            </linearGradient>
-          </defs>
-          <circle class="ring-track" cx="120" cy="120" r="102"></circle>
-          <circle class="ring-progress" cx="120" cy="120" r="102"></circle>
-        </svg>
+    <div id="main-ui">
+        <div id="branding-container">
+            <div class="presented-by">MICRO HAUS presents</div>
+            <div class="artist-name">DJ GC77XR</div>
+        </div>
+        <h1 id="vessel-title">SATA-CODA</h1>
+        <div id="ritual-line">DAILY RITUAL // 77 DAY GIFT CYCLE</div>
+    </div>
 
-        <img id="microHausImage" class="micro-haus" src="micro-haus.png" alt="Micro Haus" />
-      </div>
-    </section>
+    <div id="overlay">
+        <button id="startButton">BEGIN CALIBRATION</button>
+    </div>
 
-    <section class="actions">
-      <button id="startBtn" type="button">START HERE</button>
-      <a id="giftLink" class="gift disabled" href="#" aria-disabled="true">77-Day Gift</a>
-    </section>
-  </main>
+    <div id="finalState" style="display: none;">
+        <button id="resetButton">RESET - IGNITE - INTEGRATE</button>
+    </div>
+
+    <div id="microHausReveal" class="reveal-image">
+        <img src="micro-haus.png" alt="Micro Haus">
+    </div>
+
+    <div id="endNosReveal" class="reveal-image">
+        <img src="end-NOS.png" alt="End NOS">
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
