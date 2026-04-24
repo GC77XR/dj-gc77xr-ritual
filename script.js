@@ -1,213 +1,155 @@
-// output/script.js
 document.addEventListener('DOMContentLoaded', () => {
-  const BPM = 118;
-  const SESSION_LIMIT = 11 * 60 * 1000;
-  const MICRO_HAUS_FADE_AT = SESSION_LIMIT - 18000;
-  const canvas = document.getElementById('vesselCanvas');
-  const startButton = document.getElementById('startButton');
-  const resetButton = document.getElementById('resetButton');
-  const hud = document.getElementById('hud');
-  const timerEl = document.getElementById('timer');
-  const percentEl = document.getElementById('percent');
-  const timeFill = document.getElementById('timeFill');
-  const statusLine = document.getElementById('statusLine');
-  const mainUi = document.getElementById('mainUi');
-  const microHausReveal = document.getElementById('microHausReveal');
-  const endNosReveal = document.getElementById('endNosReveal');
-  const microHausImg = microHausReveal ? microHausReveal.querySelector('img') : null;
-  const endNosImg = endNosReveal ? endNosReveal.querySelector('img') : null;
-  if (!canvas || !startButton || !resetButton || !hud || !timerEl || !percentEl || !timeFill || !statusLine || !mainUi || !microHausReveal || !endNosReveal) return;
+    const SESSION_LIMIT = 11 * 60 * 1000;
+    const SATA_DURATION = 5.5 * 60 * 1000;
+    const FADE_DURATION = 5000; 
+    const FADE_START = SATA_DURATION - (FADE_DURATION / 2); 
+    
+    const startBtn = document.getElementById('startButton');
+    const timerEl = document.getElementById('timer');
+    const timeFill = document.getElementById('timeFill');
+    const canvas = document.getElementById('vesselCanvas');
 
-  const AudioContextCtor = window.AudioContext || window.webkitAudioContext;
-  let audioCtx = null, master = null, pulseTimer = null;
-  let whiteGainNode = null, pinkGainNode = null;
-  let timerStart = 0, appState = 'LOBBY', microHausShown = false, endNosShown = false;
+    let audioCtx, whiteGain, pinkGain, timerStart, appState = 'LOBBY';
 
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-  camera.position.z = 3;
+    // Three.js Setup
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    camera.position.z = 3;
 
-  const coreGeo = new THREE.CircleGeometry(0.25, 64);
-  const coreMat = new THREE.MeshBasicMaterial({ color: 0x4b5bdc, transparent: true, opacity: 0.95 });
-  const core = new THREE.Mesh(coreGeo, coreMat);
-  scene.add(core);
+    const geometry = new THREE.SphereGeometry(1, 64, 64);
+    const material = new THREE.MeshBasicMaterial({ color: 0x4b5bdc });
+    const sphere = new THREE.Mesh(geometry, material);
+    scene.add(sphere);
+    scene.background = new THREE.Color(0x05070f); // Starts dark
 
-  const makeRing = (radius, opacity, speed) => {
-    const geo = new THREE.TorusGeometry(radius, 0.01, 2, 96, Math.PI * 1.5);
-    const mat = new THREE.MeshBasicMaterial({ color: 0x4b5bdc, transparent: true, opacity });
-    const mesh = new THREE.Mesh(geo, mat);
-    scene.add(mesh);
-    return { mesh, speed };
-  };
-  const rings = [makeRing(1.1, 0.72, 0.012), makeRing(1.4, 0.32, -0.006)];
-
-  const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
-  const mix = (a, b, t) => Math.round(a + (b - a) * t);
-  const colorMix = (c1, c2, t) => `rgb(${mix(c1[0], c2[0], t)}, ${mix(c1[1], c2[1], t)}, ${mix(c1[2], c2[2], t)})`;
-  const indigo = [75, 91, 220];
-  const gold = [245, 197, 66];
-  const fire = [255, 138, 30];
-
-  function formatTime(ms) {
-    const total = Math.max(0, Math.ceil(ms / 1000));
-    const m = String(Math.floor(total / 60)).padStart(2, '0');
-    const s = String(total % 60).padStart(2, '0');
-    return `${m}:${s}`;
-  }
-
-  function ensureAudio() {
-    if (!AudioContextCtor) return false;
-    if (!audioCtx) audioCtx = new AudioContextCtor();
-    if (audioCtx.state === 'suspended') audioCtx.resume();
-    if (master) return true;
-
-    master = audioCtx.createGain();
-    master.gain.value = 0.0001;
-    master.connect(audioCtx.destination);
-
-    const oscillator = audioCtx.createOscillator();
-    oscillator.type = 'sine';
-    oscillator.frequency.value = 58;
-    const oscillatorGain = audioCtx.createGain();
-    oscillatorGain.gain.value = 0.04;
-    oscillator.connect(oscillatorGain).connect(master);
-
-    const drift = audioCtx.createOscillator();
-    drift.type = 'sine';
-    drift.frequency.value = 0.12;
-    const driftGain = audioCtx.createGain();
-    driftGain.gain.value = 8;
-    drift.connect(driftGain).connect(oscillator.frequency);
-
-    const makeNoise = () => {
-      const buf = audioCtx.createBuffer(1, audioCtx.sampleRate, audioCtx.sampleRate);
-      const data = buf.getChannelData(0);
-      for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
-      return buf;
-    };
-
-    const whiteSrc = audioCtx.createBufferSource();
-    whiteSrc.buffer = makeNoise();
-    whiteSrc.loop = true;
-    whiteGainNode = audioCtx.createGain();
-    whiteGainNode.gain.value = 0.025;
-    whiteSrc.connect(whiteGainNode).connect(master);
-
-    const pinkSrc = audioCtx.createBufferSource();
-    pinkSrc.buffer = makeNoise();
-    pinkSrc.loop = true;
-    const pinkFilter1 = audioCtx.createBiquadFilter();
-    pinkFilter1.type = 'lowpass';
-    pinkFilter1.frequency.value = 1500;
-    pinkFilter1.Q.value = 0.7;
-    const pinkFilter2 = audioCtx.createBiquadFilter();
-    pinkFilter2.type = 'lowpass';
-    pinkFilter2.frequency.value = 650;
-    pinkFilter2.Q.value = 0.8;
-    pinkGainNode = audioCtx.createGain();
-    pinkGainNode.gain.value = 0.0001;
-    pinkSrc.connect(pinkFilter1).connect(pinkFilter2).connect(pinkGainNode).connect(master);
-
-    oscillator.start();
-    drift.start();
-    whiteSrc.start();
-    pinkSrc.start();
-    return true;
-  }
-
-  function schedulePulse() {
-    if (!audioCtx || appState !== 'ACTIVE') return;
-    const now = audioCtx.currentTime;
-    master.gain.cancelScheduledValues(now);
-    master.gain.setValueAtTime(0.0001, now);
-    master.gain.exponentialRampToValueAtTime(0.07, now + 0.02);
-    master.gain.exponentialRampToValueAtTime(0.025, now + 0.16);
-    pulseTimer = setTimeout(schedulePulse, 60000 / BPM * 1.05);
-  }
-
-  function updateVisuals(elapsed) {
-    const t = clamp(elapsed / SESSION_LIMIT, 0, 1);
-    const warmT = clamp((elapsed - SESSION_LIMIT * 0.22) / (SESSION_LIMIT * 0.78), 0, 1);
-    const coreColor = colorMix(indigo, gold, t);
-    const arcColor = colorMix(indigo, gold, warmT);
-    core.material.color.set(coreColor);
-    rings.forEach(r => r.mesh.material.color.set(arcColor));
-    timeFill.style.width = `${t * 100}%`;
-    timeFill.style.background = `linear-gradient(90deg, ${colorMix(indigo, [255,255,255], t * 0.25)} 0%, ${colorMix(indigo, gold, t)} 55%, ${colorMix(gold, fire, t)} 100%)`;
-    document.body.style.background = t < 0.5 ? 'radial-gradient(circle at top, #11183a 0%, #f5c542 56%)' : 'radial-gradient(circle at top, #f5c542 0%, #11183a 56%)';
-  }
-
-  function showMicroHaus() {
-    if (microHausShown) return;
-    microHausShown = true;
-    microHausReveal.classList.remove('hidden');
-    if (microHausImg) microHausImg.src = 'micro-haus.png';
-    requestAnimationFrame(() => microHausReveal.classList.add('show'));
-  }
-
-  function showEndNos() {
-    if (endNosShown) return;
-    endNosShown = true;
-    endNosReveal.classList.remove('hidden');
-    if (endNosImg) endNosImg.src = 'end-NOS.png';
-    requestAnimationFrame(() => endNosReveal.classList.add('show'));
-  }
-
-  function finishExperience() {
-    appState = 'END';
-    clearTimeout(pulseTimer);
-    if (master && audioCtx) master.gain.setTargetAtTime(0.0001, audioCtx.currentTime, 0.04);
-    showEndNos();
-    document.body.classList.remove('is-active');
-    hud.classList.add('hidden');
-    statusLine.textContent = 'STATUS: COMPLETE // RESET - IGNITE - INTEGRATE';
-  }
-
-  function update() {
-    requestAnimationFrame(update);
-    if (appState !== 'ACTIVE') { renderer.render(scene, camera); return; }
-    const elapsed = Date.now() - timerStart;
-    const remaining = Math.max(0, SESSION_LIMIT - elapsed);
-    const pct = clamp((elapsed / SESSION_LIMIT) * 100, 0, 100);
-    rings.forEach(r => r.mesh.rotation.z += r.speed);
-    const pulse = 1 + Math.sin(Date.now() * 0.004) * 0.08;
-    core.scale.set(pulse, pulse, 1);
-    timerEl.textContent = formatTime(remaining);
-    percentEl.textContent = Math.floor(pct);
-    statusLine.textContent = `STATUS: CALIBRATING // ${timerEl.textContent} // ${Math.floor(pct)}% COMPLETE`;
-    if (audioCtx && master) {
-      const whiteAmt = clamp(1 - t, 0, 1);
-      const pinkAmt = clamp(t, 0, 1);
-      whiteGainNode.gain.setTargetAtTime(0.028 * whiteAmt, audioCtx.currentTime, 0.05);
-      pinkGainNode.gain.setTargetAtTime(0.045 * pinkAmt, audioCtx.currentTime, 0.05);
-      master.gain.setTargetAtTime(0.05, audioCtx.currentTime, 0.02);
+    function createPinkNoise() {
+        const bufferSize = 4096;
+        let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
+        const node = audioCtx.createScriptProcessor(bufferSize, 1, 1);
+        node.onaudioprocess = (e) => {
+            const output = e.outputBuffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+                const white = Math.random() * 2 - 1;
+                b0 = 0.99886 * b0 + white * 0.0555179;
+                b1 = 0.99332 * b1 + white * 0.0750759;
+                b2 = 0.96900 * b2 + white * 0.1538520;
+                b3 = 0.86650 * b3 + white * 0.3104856;
+                b4 = 0.55000 * b4 + white * 0.5329522;
+                b5 = -0.7616 * b5 - white * 0.0168980;
+                output[i] = b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362;
+                output[i] *= 0.11; b6 = white * 0.115926;
+            }
+        };
+        return node;
     }
-    updateVisuals(elapsed);
-    if (elapsed >= MICRO_HAUS_FADE_AT) showMicroHaus();
-    if (elapsed >= SESSION_LIMIT) {
-      timerEl.textContent = '00:00';
-      percentEl.textContent = '100';
-      finishExperience();
+
+    function initAudio() {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        // White Noise Source
+        const whiteBuf = audioCtx.createBuffer(1, audioCtx.sampleRate * 2, audioCtx.sampleRate);
+        const d = whiteBuf.getChannelData(0);
+        for (let i=0; i<d.length; i++) d[i] = Math.random() * 2 - 1;
+        const whiteSrc = audioCtx.createBufferSource();
+        whiteSrc.buffer = whiteBuf; 
+        whiteSrc.loop = true;
+        
+        whiteGain = audioCtx.createGain();
+        whiteGain.gain.value = 0.05; 
+        whiteSrc.connect(whiteGain).connect(audioCtx.destination);
+        whiteSrc.start();
+
+        // Pink Noise Source
+        const pinkNode = createPinkNoise();
+        pinkGain = audioCtx.createGain();
+        pinkGain.gain.value = 0.0; 
+        pinkNode.connect(pinkGain).connect(audioCtx.destination);
+        
+        if (audioCtx.state === 'suspended') audioCtx.resume();
     }
-    renderer.render(scene, camera);
-  }
 
-  function startExperience() {
-    if (!ensureAudio()) return;
-    timerStart = Date.now();
-    appState = 'ACTIVE';
-    hud.classList.remove('hidden');
-    document.body.classList.add('is-active');
-    statusLine.textContent = 'STATUS: CALIBRATING // 11:00 // 0% COMPLETE';
-    startButton.disabled = true;
-    schedulePulse();
-  }
+    startBtn.addEventListener('click', () => {
+        initAudio();
+        timerStart = Date.now();
+        appState = 'ACTIVE';
+        canvas.style.display = 'block';
+        document.getElementById('mainUi').classList.add('hidden');
+        document.getElementById('hud').classList.remove('hidden');
+        
+        // Initial SATA Colors
+        scene.background = new THREE.Color(0xf5c542);
+        sphere.material.color.set(0x4b5bdc);
+        
+        update();
+    });
 
-  startButton.addEventListener('click', startExperience);
-  resetButton.addEventListener('click', () => window.location.reload());
-  window.addEventListener('resize', () => { camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); });
-  update();
+    document.getElementById('resetButton').addEventListener('click', () => {
+        window.location.reload();
+    });
+
+    function update() {
+        if (appState !== 'ACTIVE') return;
+        requestAnimationFrame(update);
+        const elapsed = Date.now() - timerStart;
+        const remaining = Math.max(0, SESSION_LIMIT - elapsed);
+        const pct = Math.min(elapsed / SESSION_LIMIT, 1);
+
+        // Update Timer HUD
+        const mins = Math.floor(remaining / 60000);
+        const secs = Math.floor((remaining % 60000) / 1000);
+        timerEl.textContent = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        document.getElementById('percent').textContent = Math.floor(pct * 100);
+        timeFill.style.width = `${pct * 100}%`;
+
+        // Crossfade Volume Logic
+        whiteGain.gain.value = 0.05 * (1 - pct);
+        pinkGain.gain.value = 0.05 * pct;
+
+        // Visual Interpolation (Lerp) Logic for the 5-second breath
+        let fadeLerp = Math.max(0, Math.min(1, (elapsed - FADE_START) / FADE_DURATION));
+        
+        let breathPulse = 1;
+        if (elapsed >= FADE_START && elapsed <= FADE_START + FADE_DURATION) {
+            breathPulse = 1 + (Math.sin(fadeLerp * Math.PI) * 0.15); 
+        }
+        sphere.scale.set(breathPulse, breathPulse, breathPulse);
+
+        // The Color Flip
+        const indigoColor = new THREE.Color(0x4b5bdc);
+        const goldColor = new THREE.Color(0xf5c542);
+
+        const currentBg = new THREE.Color().copy(goldColor).lerp(indigoColor, fadeLerp);
+        const currentSphere = new THREE.Color().copy(indigoColor).lerp(goldColor, fadeLerp);
+
+        scene.background = currentBg;
+        sphere.material.color.set(currentSphere);
+        
+        // Progress bar color transition
+        const barColor1 = new THREE.Color(0x4b5bdc).lerp(new THREE.Color(0xff8a1e), pct);
+        timeFill.style.background = `rgb(${Math.floor(barColor1.r*255)}, ${Math.floor(barColor1.g*255)}, ${Math.floor(barColor1.b*255)})`;
+
+        // Image Reveal Sequences
+        if (elapsed >= SESSION_LIMIT - 18000) {
+            document.getElementById('microHausReveal').classList.add('show');
+        }
+        
+        if (elapsed >= SESSION_LIMIT) {
+            appState = 'END';
+            document.getElementById('endNosReveal').classList.add('show');
+            if (audioCtx) {
+                whiteGain.gain.setTargetAtTime(0.0001, audioCtx.currentTime, 1.5);
+                pinkGain.gain.setTargetAtTime(0.0001, audioCtx.currentTime, 1.5);
+            }
+        }
+        renderer.render(scene, camera);
+    }
+
+    // Handle window resizing
+    window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    });
 });
