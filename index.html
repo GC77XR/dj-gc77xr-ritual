@@ -46,6 +46,7 @@
         .gift-link { 
             color: var(--gold); text-decoration: underline; letter-spacing: 2px; 
             font-size: 0.9rem; text-transform: uppercase; cursor: pointer;
+            background: none; border: none; font-family: inherit;
         }
 
         .legalFooter {
@@ -67,7 +68,6 @@
         .headerText { font-family: 'Archivo Black', sans-serif; font-size: 1.5rem; color: var(--gold); letter-spacing: 3px; text-align: center;}
         .subText { font-family: 'Space Grotesk', sans-serif; font-size: 1rem; letter-spacing: 5px; }
 
-        /* New End Screen Layout Styles */
         .endActions {
             display: flex;
             flex-direction: column;
@@ -89,14 +89,36 @@
             max-width: 80%;
         }
 
-        .endDisclosures a {
-            color: inherit;
-            text-decoration: none;
-        }
+        .endDisclosures a { color: inherit; text-decoration: none; }
 
         .returnButton {
             background: linear-gradient(145deg, var(--indigo), var(--gold));
             border: none; color: #fff; padding: 15px 40px; font-weight: bold; letter-spacing: 3px; cursor: pointer; margin-top: 10px;
+        }
+
+        /* Form Styles */
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 85%;
+            max-width: 350px;
+            margin-top: 10px;
+        }
+        .contact-form input {
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--indigo);
+            color: #fff;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1rem;
+            outline: none;
+            border-radius: 4px;
+        }
+        .contact-form input:focus { border-color: var(--gold); }
+        .submitButton {
+            background: linear-gradient(145deg, var(--gold), var(--fire));
+            border: none; color: #000; padding: 15px; font-weight: bold; letter-spacing: 3px; cursor: pointer; margin-top: 10px; border-radius: 4px;
         }
     </style>
 </head>
@@ -121,9 +143,6 @@
 
         <div id="actionArea">
             <button id="startButton">START HERE</button>
-            <div class="milestones">
-                <a href="https://yourwebsite.com/gift" target="_blank" class="gift-link">Enter to the 77 Day gift</a>
-            </div>
         </div>
     </main>
 
@@ -138,13 +157,27 @@
         
         <div class="endActions">
             <button id="resetButton" class="returnButton">RETURN TO EXPERIENCE</button>
-            <a href="https://yourwebsite.com/gift" target="_blank" class="gift-link end-gift">Sign up to the 77 Day Challenge Gift</a>
+            <button id="openGiftFormBtn" class="gift-link end-gift">Sign up to the 77 Day Challenge Gift</button>
         </div>
 
         <div class="endDisclosures">
             <a href="#">Privacy Policy</a> | <a href="#">Terms & Legal</a>
             <p>This experience is symbolic, ceremonial, and creative. It is not medical, legal, financial, or psychological advice.</p>
         </div>
+    </section>
+
+    <section id="giftFormReveal" class="reveal hidden">
+        <div class="revealText headerText">77 DAY GIFT CYCLE</div>
+        <p class="subText" style="margin-bottom: 10px; font-size: 0.8rem; text-align: center;">Enter your details to receive access.</p>
+        
+        <form id="contactForm" class="contact-form">
+            <input type="text" id="userName" placeholder="Full Name" required>
+            <input type="email" id="userEmail" placeholder="Email Address" required>
+            <input type="tel" id="userPhone" placeholder="Phone Number (Optional)">
+            <button type="submit" class="submitButton">SUBMIT</button>
+        </form>
+
+        <button id="closeFormBtn" style="background: none; border: none; color: rgba(255,255,255,0.5); margin-top: 20px; cursor: pointer; letter-spacing: 2px;">CANCEL</button>
     </section>
 
     <footer class="legalFooter">
@@ -161,10 +194,10 @@
             // === FAST TESTING VARIABLES ===
             const SESSION_LIMIT = 10000; // 10 seconds total
             const SATA_DURATION = 5000; // 5 seconds halfway mark
-            const FADE_DURATION = 2000; // 2-second fade for testing
+            const FADE_DURATION = 2000;  
             const FADE_START = SATA_DURATION - (FADE_DURATION / 2); 
-            const MICRO_HAUS_TRIGGER = 3000; // Logo reveals 3 seconds before the end
-            const MAX_VOL = 0.5;
+            const MICRO_HAUS_TRIGGER = 3000; 
+            const MAX_VOL = 0.5; 
             
             const startBtn = document.getElementById('startButton');
             const timerEl = document.getElementById('timer');
@@ -173,7 +206,7 @@
 
             let audioCtx, whiteGain, greyGain, pinkGain, timerStart, appState = 'LOBBY';
 
-            // Three.js Setup (2D Rings)
+            // 2D Visual Setup
             const scene = new THREE.Scene();
             const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
             const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
@@ -265,6 +298,7 @@
                 if (audioCtx.state === 'suspended') audioCtx.resume();
             }
 
+            // Start Button
             startBtn.addEventListener('click', () => {
                 initAudio();
                 timerStart = Date.now();
@@ -279,8 +313,38 @@
                 update();
             });
 
+            // Return to Experience Button
             document.getElementById('resetButton').addEventListener('click', () => {
                 window.location.reload();
+            });
+
+            // Form Logic
+            const endScreen = document.getElementById('endNosReveal');
+            const formScreen = document.getElementById('giftFormReveal');
+
+            document.getElementById('openGiftFormBtn').addEventListener('click', () => {
+                endScreen.classList.remove('show');
+                setTimeout(() => {
+                    endScreen.classList.add('hidden');
+                    formScreen.classList.remove('hidden');
+                    setTimeout(() => formScreen.classList.add('show'), 50);
+                }, 500);
+            });
+
+            document.getElementById('closeFormBtn').addEventListener('click', () => {
+                formScreen.classList.remove('show');
+                setTimeout(() => {
+                    formScreen.classList.add('hidden');
+                    endScreen.classList.remove('hidden');
+                    setTimeout(() => endScreen.classList.add('show'), 50);
+                }, 500);
+            });
+
+            // Form Submit Simulation
+            document.getElementById('contactForm').addEventListener('submit', (e) => {
+                e.preventDefault(); // Prevents page reload for now
+                document.getElementById('contactForm').innerHTML = '<p style="color: var(--gold); margin-top: 20px; font-size: 1.2rem;">Thank you.<br>Your calibration is registered.</p>';
+                document.getElementById('closeFormBtn').textContent = "RETURN";
             });
 
             function update() {
@@ -290,7 +354,6 @@
                 const remaining = Math.max(0, SESSION_LIMIT - elapsed);
                 const pct = Math.min(elapsed / SESSION_LIMIT, 1);
 
-                // HUD updates based on the full 11-minute display logic so it looks correct even while fast-testing
                 const displayRemaining = Math.max(0, (11 * 60 * 1000) * (1 - pct));
                 const mins = Math.floor(displayRemaining / 60000);
                 const secs = Math.floor((displayRemaining % 60000) / 1000);
@@ -298,7 +361,7 @@
                 document.getElementById('percent').textContent = Math.floor(pct * 100);
                 timeFill.style.width = `${pct * 100}%`;
 
-                // 3-Stage Audio Crossfade
+                // Crossfade
                 if (pct <= 0.5) {
                     let phasePct = pct / 0.5; 
                     whiteGain.gain.value = MAX_VOL * (1 - phasePct);
@@ -311,13 +374,13 @@
                     pinkGain.gain.value = MAX_VOL * phasePct;
                 }
 
-                // Animate Rings
+                // Rotations
                 ring1.rotation.z -= 0.01;
                 ring2.rotation.z += 0.008;
                 ring3.rotation.z -= 0.005;
                 baseLine.position.y = -1.5 + Math.sin(Date.now() * 0.002) * 0.05;
 
-                // Color Fade & Pulse Logic
+                // Color Lerp & Breathing
                 let fadeLerp = Math.max(0, Math.min(1, (elapsed - FADE_START) / FADE_DURATION));
                 let breathPulse = 1;
                 if (elapsed >= FADE_START && elapsed <= FADE_START + FADE_DURATION) {
@@ -333,13 +396,15 @@
                 const barColor1 = new THREE.Color(0x4b5bdc).lerp(new THREE.Color(0xff8a1e), pct);
                 timeFill.style.background = `rgb(${Math.floor(barColor1.r*255)}, ${Math.floor(barColor1.g*255)}, ${Math.floor(barColor1.b*255)})`;
 
-                // Reval Logic for Testing
+                // Sequenced Reveals with the correct remove('hidden') logic
                 if (elapsed >= SESSION_LIMIT - MICRO_HAUS_TRIGGER) {
+                    document.getElementById('microHausReveal').classList.remove('hidden');
                     document.getElementById('microHausReveal').classList.add('show');
                 }
                 
                 if (elapsed >= SESSION_LIMIT) {
                     appState = 'END';
+                    document.getElementById('endNosReveal').classList.remove('hidden');
                     document.getElementById('endNosReveal').classList.add('show');
                     if (audioCtx) {
                         whiteGain.gain.setTargetAtTime(0.0001, audioCtx.currentTime, 1.5);
