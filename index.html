@@ -1,45 +1,58 @@
-<!-- output/index.html -->
 <!DOCTYPE html>
-<html lang='en'>
+<html lang="en">
 <head>
-  <meta charset='UTF-8' />
-  <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
-  <title>SATA-CODA Calibration | DJ GC77XR</title>
-  <meta name='description' content='SATA-CODA calibration experience by Mycrore House presents DJ GC77XR.' />
-  <link rel='preconnect' href='https://fonts.googleapis.com'>
-  <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin>
-  <link href='https://fonts.googleapis.com/css2?family=Archivo+Black&family=Cinzel:wght@600;700&family=Space+Grotesk:wght@400;500;700&display=swap' rel='stylesheet'>
-  <link rel='icon' href='data:;base64,iVBORw0KGgo=' />
-  <link rel='stylesheet' href='style.css' />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SATA-CODA Calibration | DJ GC77XR</title>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=3">
 </head>
 <body>
-  <canvas id='vesselCanvas'></canvas>
-  <div id='hud' class='hud hidden'>
-    <div id='statusLine'>STATUS: CALIBRATING // <span id='timer'>11:00</span> // <span id='percent'>0</span>% COMPLETE</div>
-    <div id='timeBar'><div id='timeFill'></div></div>
-  </div>
-  <main id='mainUi' class='panel'>
-    <div id='brandingContainer' class='branding'>
-      <div class='presentedBy'>Mycrore House presents</div>
-      <div class='artistName'>DJ GC77XR</div>
-      <div class='calibrationLabel'>SATA Koda Calibration</div>
+    <canvas id="vesselCanvas"></canvas>
+
+    <div id="hud" class="hidden">
+        <div id="statusLine">CALIBRATING // <span id="timer">11:00</span> // <span id="percent">0</span>%</div>
+        <div id="timeBar"><div id="timeFill"></div></div>
     </div>
-    <button id='startButton' class='startButton' aria-label='Start here'>Start Here</button>
-    <a id='giftLink' href='#dailyRitual' class='giftLink'>77-Day Gift Cycle</a>
-    <div id='dailyRitual' class='disclaimer'>RESET - IGNITE - INTEGRATE</div>
-  </main>
-  <section id='microHausReveal' class='reveal hidden'>
-    <div class='revealLabel'>MICRO HAUS</div>
-    <img src='micro-haus.png' alt='Micro Haus' />
-    <div class='revealText'>END PHASE SIGNAL</div>
-  </section>
-  <section id='endNosReveal' class='reveal hidden'>
-    <div class='revealLabel'>END-NOS</div>
-    <img src='end-NOS.png' alt='End NOS' />
-    <div class='revealText'>RESET - IGNITE - INTEGRATE</div>
-    <button id='resetButton'>RESET - IGNITE - INTEGRATE</button>
-  </section>
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js'></script>
-  <script src='script.js'></script>
+
+    <main id="mainUi" class="panel">
+        <div class="branding">
+            <div class="presentedBy">MICRO HAUS presents</div>
+            <div class="artistName">DJ GC77XR</div>
+        </div>
+
+        <div class="title-group">
+            <h1 id="vesselTitle">SATA-CODA CALIBRATION</h1>
+            <div id="mantra">RESET-IGNITE-INTEGRATE</div>
+        </div>
+
+        <div id="actionArea">
+            <button id="startButton">START HERE</button>
+            <div class="milestones">
+                <a href="#" class="gift-link">77 Day Gift Cycle</a>
+            </div>
+        </div>
+    </main>
+
+    <section id="microHausReveal" class="reveal hidden">
+        <img src="micro-haus.png" alt="Micro Haus">
+    </section>
+
+    <section id="endNosReveal" class="reveal hidden">
+        <div class="revealText headerText">CALIBRATION COMPLETED</div>
+        <img src="end-NOS.png" alt="End NOS Anchor">
+        <div class="revealText subText">NOS-END.</div>
+        <button id="resetButton" class="returnButton">RETURN TO EXPERIENCE</button>
+    </section>
+
+    <footer class="legalFooter">
+        <div class="legalText">
+            <a href="#">Privacy Policy</a> | <a href="#">Terms & Legal</a>
+            <p>This experience is symbolic, ceremonial, and creative. It is not medical, legal, financial, or psychological advice.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="script.js?v=3"></script>
 </body>
 </html>
