@@ -1,38 +1,77 @@
-function updateVisuals(elapsed) {
-  const t = clamp(elapsed / SESSION_LIMIT, 0, 1);
-  const SATA_DURATION = 330000; 
-  
-  let colorT = 0;
-  if (elapsed >= SATA_DURATION) {
-    colorT = clamp((elapsed - SATA_DURATION) / (SESSION_LIMIT - SATA_DURATION), 0, 1);
-  }
+document.addEventListener('DOMContentLoaded', () => {
+    const SESSION_LIMIT = 11 * 60 * 1000;
+    const SATA_DURATION = 5.5 * 60 * 1000;
+    const MICRO_HAUS_FADE_AT = SESSION_LIMIT - 18000;
 
-  const coreColor = colorMix(indigo, gold, colorT);
-  const arcColor = colorMix(indigo, gold, colorT);
-  
-  const fillColor = `linear-gradient(90deg, ${colorMix(indigo, [143, 91, 255], t * 0.7)} 0%, ${colorMix([143, 91, 255], gold, t)} 52%, ${colorMix(gold, fire, t)} 100%)`;
-  
-  core.material.color.set(coreColor);
-  arcs.forEach(a => a.mesh.material.color.set(arcColor));
-  timeFill.style.width = `${t * 100}%`;
-  timeFill.style.background = fillColor;
-  
-  document.body.style.background = t < 0.5 ? 'radial-gradient(circle at top, #11183a 0%, #05070f 56%)' : 'radial-gradient(circle at top, #1c1807 0%, #05070f 56%)';
-  
-  circle.style.background = `radial-gradient(circle at 35% 30%, rgba(255,255,255,.22), transparent 18%), radial-gradient(circle at 50% 50%, ${colorMix(fire, gold, colorT * 0.8)}, ${colorMix(gold, indigo, 1 - colorT)})`;
-  circle.style.boxShadow = `inset 0 10px 24px rgba(255,255,255,.12), inset 0 -18px 28px rgba(0,0,0,.24), 0 0 0 10px rgba(75,91,220,${0.10 * (1 - colorT)}), 0 0 0 24px rgba(245,197,66,${0.06 + 0.10 * colorT}), 0 0 60px rgba(245,197,66,${0.20 + 0.18 * colorT})`;
-}
+    const canvas = document.getElementById('vesselCanvas');
+    const startBtn = document.getElementById('startButton');
+    const resetBtn = document.getElementById('resetButton');
+    const mainUi = document.getElementById('mainUi');
 
-function finishExperience() { 
-  appState = 'END'; 
-  clearTimeout(pulseTimer); 
-  
-  if (master && audioCtx) {
-    master.gain.setTargetAtTime(0.0001, audioCtx.currentTime, 1.5); 
-  }
-  
-  showEndNos(); 
-  document.body.classList.remove('is-active'); 
-  hud.classList.add('hidden'); 
-  statusLine.textContent = 'STATUS: COMPLETE // RESET - IGNITE - INTEGRATED'; 
-}
+    let audioCtx, whiteGain, pinkGain, timerStart, appState = 'LOBBY';
+
+    // Three.js Setup (Visuals)
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    camera.position.z = 3;
+
+    function initAudio() {
+        if (audioCtx) return;
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        // Setup Noise nodes here... (White to Pink crossfade logic)
+        // White noise node setup
+        const whiteBuffer = audioCtx.createBuffer(1, audioCtx.sampleRate * 2, audioCtx.sampleRate);
+        const data = whiteBuffer.getChannelData(0);
+        for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
+        const whiteSource = audioCtx.createBufferSource();
+        whiteSource.buffer = whiteBuffer;
+        whiteSource.loop = true;
+
+        whiteGain = audioCtx.createGain();
+        whiteGain.gain.value = 0.05;
+        whiteSource.connect(whiteGain).connect(audioCtx.destination);
+        whiteSource.start();
+
+        // Resume for iOS/Mobile
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+    }
+
+    startBtn.addEventListener('click', () => {
+        initAudio();
+        timerStart = Date.now();
+        appState = 'ACTIVE';
+        canvas.style.display = 'block';
+        mainUi.classList.add('hidden');
+        document.getElementById('hud').classList.remove('hidden');
+        update();
+    });
+
+    function update() {
+        if (appState !== 'ACTIVE') return;
+        requestAnimationFrame(update);
+        const elapsed = Date.now() - timerStart;
+        const pct = elapsed / SESSION_LIMIT;
+
+        // SATA to CODA Color Logic
+        let colorT = 0;
+        if (elapsed >= SATA_DURATION) {
+            colorT = (elapsed - SATA_DURATION) / (SESSION_LIMIT - SATA_DURATION);
+        }
+        // Update Three.js colors based on colorT (Indigo to Gold)
+
+        if (elapsed >= MICRO_HAUS_FADE_AT) document.getElementById('microHausReveal').classList.add('show');
+        if (elapsed >= SESSION_LIMIT) finish();
+        
+        renderer.render(scene, camera);
+    }
+
+    function finish() {
+        appState = 'END';
+        document.getElementById('endNosReveal').classList.add('show');
+        if (audioCtx) audioCtx.close();
+    }
+
+    resetBtn.addEventListener('click', () => window.location.reload());
+});
