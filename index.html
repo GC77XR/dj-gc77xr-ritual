@@ -1,69 +1,62 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang='en'>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta charset='UTF-8' />
+  <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
   <title>SATA-CODA Protocol | DJ GC77XR</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Cinzel:wght@600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css" />
+  <meta name='description' content='Version 14 master clean build for SATA-CODA Protocol.' />
+  <link rel='preconnect' href='https://fonts.googleapis.com'>
+  <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin>
+  <link href='https://fonts.googleapis.com/css2?family=Archivo+Black&family=Cinzel:wght@600;700&family=Space+Grotesk:wght@400;500;700&display=swap' rel='stylesheet'>
+  <link rel='icon' href='data:;base64,iVBORw0KGgo=' />
+  <link rel='stylesheet' href='style.css' />
 </head>
 <body>
-  <canvas id="vesselCanvas"></canvas>
-
-  <div id="hud" class="hud hidden">
-    <div id="statusLine">STATUS: CALIBRATING // <span id="timer">11:00</span> // <span id="percent">0</span>% COMPLETE</div>
-    <div id="timeBar"><div id="timeFill"></div></div>
+  <canvas id='vesselCanvas'></canvas>
+  <div id='hud' class='hud hidden'>
+    <div id='statusLine'>STATUS: CALIBRATING // <span id='timer'>11:00</span> // <span id='percent'>0</span>% COMPLETE</div>
+    <div id='timeBar'><div id='timeFill'></div></div>
   </div>
-
-  <main id="mainUi" class="panel">
-    <div id="brandingContainer" class="branding">
-      <div class="presentedBy">MICRO HAUS presents</div>
-      <div class="artistName">DJ GC77XR</div>
+  <main id='mainUi' class='panel'>
+    <div id='brandingContainer' class='branding'>
+      <div class='presentedBy'>MICRO HAUS presents</div>
+      <div class='artistName'>DJ GC77XR</div>
     </div>
-
-    <h1 id="vesselTitle">SATA-CODA Protocol</h1>
-    <a id="ritualLine" href="#dailyRitual">Daily Ritual // 77-Day Gift Cycle</a>
-
-    <div id="circleShell">
-      <button id="startButton" aria-label="Begin calibration">
-        <span id="circleGlow"></span>
-        <span id="circleCore"></span>
-        <span class="orb-ring ring1"></span>
-        <span class="orb-ring ring2"></span>
-        <span class="orb-ring ring3"></span>
+    <h1 id='vesselTitle'>SATA-CODA Protocol</h1>
+    <a id='ritualLine' href='#dailyRitual'>Daily Ritual // 77-Day Gift Cycle</a>
+    <div id='circleShell'>
+      <button id='startButton' aria-label='Begin calibration'>
+        <span id='circleGlow'></span>
+        <span id='circleCore'></span>
+        <span class='orb-ring ring1'></span>
+        <span class='orb-ring ring2'></span>
+        <span class='orb-ring ring3'></span>
       </button>
     </div>
-
-    <div class="milestones">
+    <div class='milestones'>
       <div>Day 7</div>
       <div>Day 10</div>
       <div>Day 30</div>
       <div>Day 77</div>
     </div>
-
-    <div id="dailyRitual" class="disclaimer">
+    <div id='dailyRitual' class='disclaimer'>
       <p>This experience is symbolic, ceremonial, and creative.</p>
       <p>It is not medical, legal, financial, private, or psychological advice.</p>
       <p>All disclosures remain visible on the website during the ritual and at completion.</p>
     </div>
   </main>
-
-  <section id="microHausReveal" class="reveal hidden">
-    <div class="revealLabel">MICRO HAUS</div>
-    <img src="micro-haus.png" alt="Micro Haus" />
-    <div class="revealText">MICRO HAUS // End-phase signal</div>
+  <section id='microHausReveal' class='reveal hidden'>
+    <div class='revealLabel'>MICRO HAUS</div>
+    <img src='micro-haus.png' alt='Micro Haus' />
+    <div class='revealText'>MICRO HAUS // End-phase signal</div>
   </section>
-
-  <section id="endNosReveal" class="reveal hidden">
-    <div class="revealLabel">END-NOS</div>
-    <img src="end-NOS.png" alt="End NOS" />
-    <div class="revealText">END-NOS // RESET - IGNITE - INTEGRATE</div>
-    <button id="resetButton">RESET - IGNITE - INTEGRATE</button>
+  <section id='endNosReveal' class='reveal hidden'>
+    <div class='revealLabel'>END-NOS</div>
+    <img src='end-NOS.png' alt='End NOS' />
+    <div class='revealText'>END-NOS // RESET - IGNITE - INTEGRATE</div>
+    <button id='resetButton'>RESET - IGNITE - INTEGRATE</button>
   </section>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="script.js"></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js'></script>
+  <script src='script.js'></script>
 </body>
 </html>
