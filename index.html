@@ -170,10 +170,10 @@
         <div class="revealText headerText">77 DAY GIFT CYCLE</div>
         <p class="subText" style="margin-bottom: 10px; font-size: 0.8rem; text-align: center;">Enter your details to receive access.</p>
         
-        <form id="contactForm" class="contact-form">
-            <input type="text" id="userName" placeholder="Full Name" required>
-            <input type="email" id="userEmail" placeholder="Email Address" required>
-            <input type="tel" id="userPhone" placeholder="Phone Number (Optional)">
+        <form id="contactForm" class="contact-form" action="https://formspree.io/f/maqavpez" method="POST">
+            <input type="text" id="userName" name="Full_Name" placeholder="Full Name" required>
+            <input type="email" id="userEmail" name="Email_Address" placeholder="Email Address" required>
+            <input type="tel" id="userPhone" name="Phone_Number" placeholder="Phone Number (Optional)">
             <button type="submit" class="submitButton">SUBMIT</button>
         </form>
 
@@ -192,8 +192,8 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // === FAST TESTING VARIABLES ===
-            const SESSION_LIMIT = 10000; // 10 seconds total
-            const SATA_DURATION = 5000; // 5 seconds halfway mark
+            const SESSION_LIMIT = 10000; 
+            const SATA_DURATION = 5000;  
             const FADE_DURATION = 2000;  
             const FADE_START = SATA_DURATION - (FADE_DURATION / 2); 
             const MICRO_HAUS_TRIGGER = 3000; 
@@ -298,7 +298,6 @@
                 if (audioCtx.state === 'suspended') audioCtx.resume();
             }
 
-            // Start Button
             startBtn.addEventListener('click', () => {
                 initAudio();
                 timerStart = Date.now();
@@ -313,12 +312,10 @@
                 update();
             });
 
-            // Return to Experience Button
             document.getElementById('resetButton').addEventListener('click', () => {
                 window.location.reload();
             });
 
-            // Form Logic
             const endScreen = document.getElementById('endNosReveal');
             const formScreen = document.getElementById('giftFormReveal');
 
@@ -340,11 +337,10 @@
                 }, 500);
             });
 
-            // Form Submit Simulation
+            // Re-enabling the default form submission so it sends to Formspree
             document.getElementById('contactForm').addEventListener('submit', (e) => {
-                e.preventDefault(); // Prevents page reload for now
-                document.getElementById('contactForm').innerHTML = '<p style="color: var(--gold); margin-top: 20px; font-size: 1.2rem;">Thank you.<br>Your calibration is registered.</p>';
-                document.getElementById('closeFormBtn').textContent = "RETURN";
+                // Formspree will handle the redirect, but we will change the button text so the user knows it's working
+                document.querySelector('.submitButton').textContent = "SENDING...";
             });
 
             function update() {
@@ -361,7 +357,6 @@
                 document.getElementById('percent').textContent = Math.floor(pct * 100);
                 timeFill.style.width = `${pct * 100}%`;
 
-                // Crossfade
                 if (pct <= 0.5) {
                     let phasePct = pct / 0.5; 
                     whiteGain.gain.value = MAX_VOL * (1 - phasePct);
@@ -374,13 +369,11 @@
                     pinkGain.gain.value = MAX_VOL * phasePct;
                 }
 
-                // Rotations
                 ring1.rotation.z -= 0.01;
                 ring2.rotation.z += 0.008;
                 ring3.rotation.z -= 0.005;
                 baseLine.position.y = -1.5 + Math.sin(Date.now() * 0.002) * 0.05;
 
-                // Color Lerp & Breathing
                 let fadeLerp = Math.max(0, Math.min(1, (elapsed - FADE_START) / FADE_DURATION));
                 let breathPulse = 1;
                 if (elapsed >= FADE_START && elapsed <= FADE_START + FADE_DURATION) {
@@ -396,7 +389,6 @@
                 const barColor1 = new THREE.Color(0x4b5bdc).lerp(new THREE.Color(0xff8a1e), pct);
                 timeFill.style.background = `rgb(${Math.floor(barColor1.r*255)}, ${Math.floor(barColor1.g*255)}, ${Math.floor(barColor1.b*255)})`;
 
-                // Sequenced Reveals with the correct remove('hidden') logic
                 if (elapsed >= SESSION_LIMIT - MICRO_HAUS_TRIGGER) {
                     document.getElementById('microHausReveal').classList.remove('hidden');
                     document.getElementById('microHausReveal').classList.add('show');
