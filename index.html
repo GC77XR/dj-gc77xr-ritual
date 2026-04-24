@@ -20,33 +20,33 @@
 
         .panel {
             position: relative; z-index: 2; height: 100vh;
-            display: flex; flex-direction: column; justify-content: space-around;
-            align-items: center; padding: 40px 20px; text-align: center;
+            display: flex; flex-direction: column; justify-content: space-between;
+            align-items: center; padding: 60px 20px; text-align: center;
         }
 
-        .title-group { display: flex; flex-direction: column; gap: 10px; }
+        .title-group { display: flex; flex-direction: column; gap: 8px; }
         #vesselTitle {
             font-family: 'Archivo Black', sans-serif; font-size: clamp(1.4rem, 4.5vw, 2.5rem);
             text-transform: uppercase; letter-spacing: 2px;
         }
         #mantra { 
-            font-family: 'Archivo Black', sans-serif; font-size: clamp(1rem, 3.5vw, 1.8rem);
-            text-transform: uppercase; letter-spacing: 4px; color: rgba(255, 255, 255, 0.9); 
+            font-family: 'Archivo Black', sans-serif; font-size: clamp(0.8rem, 3vw, 1.2rem);
+            text-transform: uppercase; letter-spacing: 4px; color: rgba(255, 255, 255, 0.6); 
         }
 
-        #actionArea { display: flex; flex-direction: column; align-items: center; gap: 24px; }
+        /* Combined Hook Styles */
+        .hook-container { max-width: 500px; margin: 20px 0; line-height: 1.6; }
+        .hook-main { font-family: 'Archivo Black', sans-serif; color: var(--gold); font-size: 1.1rem; margin-bottom: 10px; }
+        .hook-sub { font-size: 0.9rem; opacity: 0.8; letter-spacing: 1px; }
+
+        #actionArea { display: flex; flex-direction: column; align-items: center; gap: 24px; width: 100%; }
 
         #startButton {
             background: linear-gradient(145deg, #2a2a2a, #0f0f0f);
-            border: 1px solid #444; color: var(--gold); padding: 20px 60px;
-            font-size: 1.1rem; font-weight: bold; letter-spacing: 5px; cursor: pointer;
+            border: 1px solid #444; color: var(--gold); padding: 20px 40px;
+            font-size: 1rem; font-weight: bold; letter-spacing: 4px; cursor: pointer;
             box-shadow: inset 1px 1px 0px #555, inset -1px -1px 0px #000;
-        }
-
-        .gift-link { 
-            color: var(--gold); text-decoration: underline; letter-spacing: 2px; 
-            font-size: 0.9rem; text-transform: uppercase; cursor: pointer;
-            background: none; border: none; font-family: inherit;
+            width: 80%; max-width: 300px;
         }
 
         .legalFooter {
@@ -54,72 +54,22 @@
             background: rgba(0,0,0,0.85); text-align: center; font-size: 0.6rem; color: rgba(255,255,255,0.4);
             z-index: 20;
         }
-        .legalFooter a { color: inherit; text-decoration: none; }
-        .legalFooter p { margin-top: 4px; }
 
         #hud { position: fixed; top: 20px; width: 100%; z-index: 5; text-align: center; font-size: 0.8rem; letter-spacing: 2px; }
         #timeBar { width: 80%; height: 10px; background: rgba(255,255,255,0.1); margin: 10px auto; border-radius: 5px; overflow: hidden; }
         #timeFill { height: 100%; width: 0%; transition: background 0.5s; background: var(--indigo); }
 
-        .reveal { position: fixed; inset: 0; z-index: 10; background: rgba(5,7,15,0.95); display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.5s; pointer-events: none; gap: 20px; }
+        .reveal { position: fixed; inset: 0; z-index: 10; background: rgba(5,7,15,0.95); display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.5s; pointer-events: none; gap: 20px; padding: 20px;}
         .reveal.show { opacity: 1; pointer-events: auto; }
-        .reveal img { max-width: 90%; max-height: 50vh; object-fit: contain; }
+        .reveal img { max-width: 90%; max-height: 40vh; object-fit: contain; }
 
         .headerText { font-family: 'Archivo Black', sans-serif; font-size: 1.5rem; color: var(--gold); letter-spacing: 3px; text-align: center;}
-        .subText { font-family: 'Space Grotesk', sans-serif; font-size: 1rem; letter-spacing: 5px; }
+        .streakText { font-family: 'Archivo Black', sans-serif; font-size: 1.2rem; color: var(--gold); letter-spacing: 3px; margin: 10px 0;}
 
-        .endActions {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .end-gift {
-            font-size: 0.8rem;
-            margin-top: 10px;
-        }
-
-        .endDisclosures {
-            margin-top: 30px;
-            text-align: center;
-            font-size: 0.6rem;
-            color: rgba(255,255,255,0.4);
-            max-width: 80%;
-        }
-
-        .endDisclosures a { color: inherit; text-decoration: none; }
-
-        .returnButton {
-            background: linear-gradient(145deg, var(--indigo), var(--gold));
-            border: none; color: #fff; padding: 15px 40px; font-weight: bold; letter-spacing: 3px; cursor: pointer; margin-top: 10px;
-        }
-
-        /* Form Styles */
-        .contact-form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            width: 85%;
-            max-width: 350px;
-            margin-top: 10px;
-        }
-        .contact-form input {
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--indigo);
-            color: #fff;
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1rem;
-            outline: none;
-            border-radius: 4px;
-        }
-        .contact-form input:focus { border-color: var(--gold); }
-        .submitButton {
-            background: linear-gradient(145deg, var(--gold), var(--fire));
-            border: none; color: #000; padding: 15px; font-weight: bold; letter-spacing: 3px; cursor: pointer; margin-top: 10px; border-radius: 4px;
-        }
+        .contact-form { display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 350px; }
+        .contact-form input { padding: 15px; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--indigo); color: #fff; font-family: inherit; border-radius: 4px; }
+        .submitButton { background: linear-gradient(145deg, var(--gold), var(--fire)); border: none; color: #000; padding: 15px; font-weight: bold; letter-spacing: 3px; cursor: pointer; border-radius: 4px; }
+        .returnButton { background: linear-gradient(145deg, var(--indigo), var(--gold)); border: none; color: #fff; padding: 15px 40px; font-weight: bold; letter-spacing: 3px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -132,17 +82,22 @@
 
     <main id="mainUi" class="panel">
         <div class="branding">
-            <div class="presentedBy">MICRO HAUS presents</div>
-            <div class="artistName">DJ GC77XR</div>
+            <p style="font-size: 0.7rem; letter-spacing: 3px; opacity: 0.5;">MICRO HAUS presents</p>
+            <p style="font-size: 1.2rem; font-weight: bold; letter-spacing: 5px;">DJ GC77XR</p>
         </div>
 
         <div class="title-group">
             <h1 id="vesselTitle">SATA-CODA CALIBRATION</h1>
-            <div id="mantra">RESET-IGNITE-INTEGRATE</div>
+            <p id="mantra">RESET-IGNITE-INTEGRATE</p>
+        </div>
+
+        <div class="hook-container">
+            <p class="hook-main">NOISE OUTSIDE. STILLNESS WITHIN.</p>
+            <p class="hook-sub">Reset your frequency to find your <strong>Body Stone</strong>. Clear the mind. Ignite the spirit. Embark on the 77-day path to master <strong>Power, Love, and Wisdom</strong>.</p>
         </div>
 
         <div id="actionArea">
-            <button id="startButton">START HERE</button>
+            <button id="startButton">BEGIN CALIBRATION</button>
         </div>
     </main>
 
@@ -151,62 +106,51 @@
     </section>
 
     <section id="endNosReveal" class="reveal hidden">
-        <div class="revealText headerText">CALIBRATION COMPLETED</div>
+        <div class="headerText">CALIBRATION COMPLETED</div>
         <img src="end-NOS.png" alt="End NOS Anchor">
-        <div class="revealText subText">NOS-END.</div>
-        
-        <div class="endActions">
-            <button id="resetButton" class="returnButton">RETURN TO EXPERIENCE</button>
-            <button id="openGiftFormBtn" class="gift-link end-gift">Sign up to the 77 Day Challenge Gift</button>
-        </div>
-
-        <div class="endDisclosures">
-            <a href="#">Privacy Policy</a> | <a href="#">Terms & Legal</a>
-            <p>This experience is symbolic, ceremonial, and creative. It is not medical, legal, financial, or psychological advice.</p>
+        <div id="streakDisplay" class="streakText">DAY 0 OF 77</div>
+        <div style="display: flex; flex-direction: column; gap: 15px; width: 100%; align-items: center;">
+            <button id="resetButton" class="returnButton">RETURN</button>
+            <button id="openGiftFormBtn" style="background:none; border:none; color:var(--gold); text-decoration:underline; font-family:inherit; cursor:pointer;">SIGN UP FOR THE 77-DAY GIFT</button>
         </div>
     </section>
 
     <section id="giftFormReveal" class="reveal hidden">
-        <div class="revealText headerText">77 DAY GIFT CYCLE</div>
-        <p class="subText" style="margin-bottom: 10px; font-size: 0.8rem; text-align: center;">Enter your details to receive access.</p>
-        
+        <div class="headerText">CLAIM YOUR GIFT</div>
         <form id="contactForm" class="contact-form" action="https://formspree.io/f/maqavpez" method="POST">
-            <input type="text" id="userName" name="Full_Name" placeholder="Full Name" required>
-            <input type="email" id="userEmail" name="Email_Address" placeholder="Email Address" required>
-            <input type="tel" id="userPhone" name="Phone_Number" placeholder="Phone Number (Optional)">
-            <button type="submit" class="submitButton">SUBMIT</button>
+            <input type="text" name="Full_Name" placeholder="Full Name" required>
+            <input type="email" name="Email_Address" placeholder="Email Address" required>
+            <input type="tel" name="Phone_Number" placeholder="Phone Number (Optional)">
+            <input type="text" name="Mailing_Address" placeholder="Mailing Address" required>
+            <button type="submit" class="submitButton">SUBMIT PROOF</button>
         </form>
-
-        <button id="closeFormBtn" style="background: none; border: none; color: rgba(255,255,255,0.5); margin-top: 20px; cursor: pointer; letter-spacing: 2px;">CANCEL</button>
+        <button id="closeFormBtn" style="background:none; border:none; color:rgba(255,255,255,0.5); cursor:pointer;">CANCEL</button>
     </section>
 
     <footer class="legalFooter">
-        <div class="legalText">
-            <a href="#">Privacy Policy</a> | <a href="#">Terms & Legal</a>
-            <p>This experience is symbolic, ceremonial, and creative. It is not medical, legal, financial, or psychological advice.</p>
-        </div>
+        <p>Privacy Policy | Terms & Legal</p>
+        <p>This experience is symbolic and creative. Not medical or legal advice.</p>
     </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // === FAST TESTING VARIABLES ===
+            // === FAST TESTING MODE (10 SECONDS) ===
             const SESSION_LIMIT = 10000; 
             const SATA_DURATION = 5000;  
             const FADE_DURATION = 2000;  
             const FADE_START = SATA_DURATION - (FADE_DURATION / 2); 
             const MICRO_HAUS_TRIGGER = 3000; 
             const MAX_VOL = 0.5; 
-            
+
             const startBtn = document.getElementById('startButton');
             const timerEl = document.getElementById('timer');
             const timeFill = document.getElementById('timeFill');
             const canvas = document.getElementById('vesselCanvas');
 
             let audioCtx, whiteGain, greyGain, pinkGain, timerStart, appState = 'LOBBY';
+            let streakCounted = false;
 
-            // 2D Visual Setup
             const scene = new THREE.Scene();
             const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
             const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
@@ -215,25 +159,15 @@
 
             const material = new THREE.MeshBasicMaterial({ color: 0x4b5bdc, side: THREE.DoubleSide });
             const visualGroup = new THREE.Group();
-
-            const centerGeo = new THREE.CircleGeometry(0.5, 64);
-            const centerCircle = new THREE.Mesh(centerGeo, material);
+            const centerCircle = new THREE.Mesh(new THREE.CircleGeometry(0.5, 64), material);
             visualGroup.add(centerCircle);
 
-            const r1Geo = new THREE.RingGeometry(0.7, 0.75, 64, 1, 0, Math.PI * 1.5);
-            const ring1 = new THREE.Mesh(r1Geo, material);
-            visualGroup.add(ring1);
+            const ring1 = new THREE.Mesh(new THREE.RingGeometry(0.7, 0.75, 64, 1, 0, Math.PI * 1.5), material);
+            const ring2 = new THREE.Mesh(new THREE.RingGeometry(0.9, 0.95, 64, 1, 0, Math.PI * 1.2), material);
+            const ring3 = new THREE.Mesh(new THREE.RingGeometry(1.1, 1.15, 64, 1, 0, Math.PI * 1.7), material);
+            visualGroup.add(ring1, ring2, ring3);
 
-            const r2Geo = new THREE.RingGeometry(0.9, 0.95, 64, 1, 0, Math.PI * 1.2);
-            const ring2 = new THREE.Mesh(r2Geo, material);
-            visualGroup.add(ring2);
-
-            const r3Geo = new THREE.RingGeometry(1.1, 1.15, 64, 1, 0, Math.PI * 1.7);
-            const ring3 = new THREE.Mesh(r3Geo, material);
-            visualGroup.add(ring3);
-
-            const lineGeo = new THREE.PlaneGeometry(4, 0.02);
-            const baseLine = new THREE.Mesh(lineGeo, material);
+            const baseLine = new THREE.Mesh(new THREE.PlaneGeometry(4, 0.02), material);
             baseLine.position.y = -1.5;
             visualGroup.add(baseLine);
 
@@ -242,20 +176,15 @@
 
             function createPinkNoise() {
                 const bufferSize = 4096;
-                let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
+                let b0=0, b1=0, b2=0, b3=0, b4=0, b5=0, b6=0;
                 const node = audioCtx.createScriptProcessor(bufferSize, 1, 1);
                 node.onaudioprocess = (e) => {
                     const output = e.outputBuffer.getChannelData(0);
-                    for (let i = 0; i < bufferSize; i++) {
-                        const white = Math.random() * 2 - 1;
-                        b0 = 0.99886 * b0 + white * 0.0555179;
-                        b1 = 0.99332 * b1 + white * 0.0750759;
-                        b2 = 0.96900 * b2 + white * 0.1538520;
-                        b3 = 0.86650 * b3 + white * 0.3104856;
-                        b4 = 0.55000 * b4 + white * 0.5329522;
-                        b5 = -0.7616 * b5 - white * 0.0168980;
-                        output[i] = b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362;
-                        output[i] *= 0.11; b6 = white * 0.115926;
+                    for (let i=0; i<bufferSize; i++) {
+                        const white = Math.random()*2-1;
+                        b0=0.99886*b0+white*0.0555179; b1=0.99332*b1+white*0.0750759; b2=0.96900*b2+white*0.1538520;
+                        b3=0.86650*b3+white*0.3104856; b4=0.55000*b4+white*0.5329522; b5=-0.7616*b5-white*0.0168980;
+                        output[i]=(b0+b1+b2+b3+b4+b5+b6+white*0.5362)*0.11; b6=white*0.115926;
                     }
                 };
                 return node;
@@ -263,155 +192,91 @@
 
             function initAudio() {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                
-                const whiteBuf = audioCtx.createBuffer(1, audioCtx.sampleRate * 2, audioCtx.sampleRate);
+                const whiteBuf = audioCtx.createBuffer(1, audioCtx.sampleRate*2, audioCtx.sampleRate);
                 const d = whiteBuf.getChannelData(0);
-                for (let i=0; i<d.length; i++) d[i] = Math.random() * 2 - 1;
+                for(let i=0; i<d.length; i++) d[i]=Math.random()*2-1;
                 
                 const whiteSrc = audioCtx.createBufferSource();
-                whiteSrc.buffer = whiteBuf; 
-                whiteSrc.loop = true;
-                whiteGain = audioCtx.createGain();
-                whiteGain.gain.value = MAX_VOL;
+                whiteSrc.buffer = whiteBuf; whiteSrc.loop = true;
+                whiteGain = audioCtx.createGain(); whiteGain.gain.value = MAX_VOL;
                 whiteSrc.connect(whiteGain).connect(audioCtx.destination);
                 whiteSrc.start();
 
                 const greySrc = audioCtx.createBufferSource();
-                greySrc.buffer = whiteBuf; 
-                greySrc.loop = true;
+                greySrc.buffer = whiteBuf; greySrc.loop = true;
                 const greyFilter = audioCtx.createBiquadFilter();
-                greyFilter.type = "peaking";
-                greyFilter.frequency.value = 3000;
-                greyFilter.Q.value = 1;
-                greyFilter.gain.value = -15; 
-                
-                greyGain = audioCtx.createGain();
-                greyGain.gain.value = 0.0;
+                greyFilter.type="peaking"; greyFilter.frequency.value=3000; greyFilter.gain.value=-15;
+                greyGain = audioCtx.createGain(); greyGain.gain.value=0;
                 greySrc.connect(greyFilter).connect(greyGain).connect(audioCtx.destination);
                 greySrc.start();
 
-                const pinkNode = createPinkNoise();
-                pinkGain = audioCtx.createGain();
-                pinkGain.gain.value = 0.0;
-                pinkNode.connect(pinkGain).connect(audioCtx.destination);
-                
+                pinkGain = audioCtx.createGain(); pinkGain.gain.value=0;
+                createPinkNoise().connect(pinkGain).connect(audioCtx.destination);
                 if (audioCtx.state === 'suspended') audioCtx.resume();
             }
 
             startBtn.addEventListener('click', () => {
-                initAudio();
-                timerStart = Date.now();
-                appState = 'ACTIVE';
+                initAudio(); timerStart = Date.now(); appState = 'ACTIVE';
                 canvas.style.display = 'block';
                 document.getElementById('mainUi').classList.add('hidden');
                 document.getElementById('hud').classList.remove('hidden');
-                
                 scene.background = new THREE.Color(0xf5c542);
-                material.color.set(0x4b5bdc);
-                
                 update();
             });
 
-            document.getElementById('resetButton').addEventListener('click', () => {
-                window.location.reload();
-            });
-
-            const endScreen = document.getElementById('endNosReveal');
-            const formScreen = document.getElementById('giftFormReveal');
-
+            document.getElementById('resetButton').addEventListener('click', () => window.location.reload());
             document.getElementById('openGiftFormBtn').addEventListener('click', () => {
-                endScreen.classList.remove('show');
+                endNosReveal.classList.remove('show');
                 setTimeout(() => {
-                    endScreen.classList.add('hidden');
-                    formScreen.classList.remove('hidden');
-                    setTimeout(() => formScreen.classList.add('show'), 50);
+                    endNosReveal.classList.add('hidden');
+                    giftFormReveal.classList.remove('hidden');
+                    setTimeout(() => giftFormReveal.classList.add('show'), 50);
                 }, 500);
-            });
-
-            document.getElementById('closeFormBtn').addEventListener('click', () => {
-                formScreen.classList.remove('show');
-                setTimeout(() => {
-                    formScreen.classList.add('hidden');
-                    endScreen.classList.remove('hidden');
-                    setTimeout(() => endScreen.classList.add('show'), 50);
-                }, 500);
-            });
-
-            // Re-enabling the default form submission so it sends to Formspree
-            document.getElementById('contactForm').addEventListener('submit', (e) => {
-                // Formspree will handle the redirect, but we will change the button text so the user knows it's working
-                document.querySelector('.submitButton').textContent = "SENDING...";
             });
 
             function update() {
                 if (appState !== 'ACTIVE') return;
                 requestAnimationFrame(update);
                 const elapsed = Date.now() - timerStart;
-                const remaining = Math.max(0, SESSION_LIMIT - elapsed);
                 const pct = Math.min(elapsed / SESSION_LIMIT, 1);
-
-                const displayRemaining = Math.max(0, (11 * 60 * 1000) * (1 - pct));
-                const mins = Math.floor(displayRemaining / 60000);
-                const secs = Math.floor((displayRemaining % 60000) / 1000);
-                timerEl.textContent = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-                document.getElementById('percent').textContent = Math.floor(pct * 100);
-                timeFill.style.width = `${pct * 100}%`;
-
-                if (pct <= 0.5) {
-                    let phasePct = pct / 0.5; 
-                    whiteGain.gain.value = MAX_VOL * (1 - phasePct);
-                    greyGain.gain.value = MAX_VOL * phasePct;
-                    pinkGain.gain.value = 0;
-                } else {
-                    let phasePct = (pct - 0.5) / 0.5; 
-                    whiteGain.gain.value = 0;
-                    greyGain.gain.value = MAX_VOL * (1 - phasePct);
-                    pinkGain.gain.value = MAX_VOL * phasePct;
-                }
-
-                ring1.rotation.z -= 0.01;
-                ring2.rotation.z += 0.008;
-                ring3.rotation.z -= 0.005;
-                baseLine.position.y = -1.5 + Math.sin(Date.now() * 0.002) * 0.05;
-
-                let fadeLerp = Math.max(0, Math.min(1, (elapsed - FADE_START) / FADE_DURATION));
-                let breathPulse = 1;
-                if (elapsed >= FADE_START && elapsed <= FADE_START + FADE_DURATION) {
-                    breathPulse = 1 + (Math.sin(fadeLerp * Math.PI) * 0.15); 
-                }
-                visualGroup.scale.set(breathPulse, breathPulse, breathPulse);
-
-                const indigoColor = new THREE.Color(0x4b5bdc);
-                const goldColor = new THREE.Color(0xf5c542);
-                scene.background = new THREE.Color().copy(goldColor).lerp(indigoColor, fadeLerp);
-                material.color.set(new THREE.Color().copy(indigoColor).lerp(goldColor, fadeLerp));
                 
-                const barColor1 = new THREE.Color(0x4b5bdc).lerp(new THREE.Color(0xff8a1e), pct);
-                timeFill.style.background = `rgb(${Math.floor(barColor1.r*255)}, ${Math.floor(barColor1.g*255)}, ${Math.floor(barColor1.b*255)})`;
+                // HUD update
+                const displayRem = Math.max(0, (11*60*1000)*(1-pct));
+                timerEl.textContent = `${Math.floor(displayRem/60000)}:${Math.floor((displayRem%60000)/1000).toString().padStart(2,'0')}`;
+                timeFill.style.width = `${pct*100}%`;
+
+                // Audio crossfade
+                if(pct <= 0.5){
+                    whiteGain.gain.value = MAX_VOL * (1 - pct/0.5);
+                    greyGain.gain.value = MAX_VOL * (pct/0.5);
+                } else {
+                    greyGain.gain.value = MAX_VOL * (1 - (pct-0.5)/0.5);
+                    pinkGain.gain.value = MAX_VOL * ((pct-0.5)/0.5);
+                }
+
+                ring1.rotation.z -= 0.01; ring2.rotation.z += 0.008; ring3.rotation.z -= 0.005;
+                
+                let fadeLerp = Math.max(0, Math.min(1, (elapsed-FADE_START)/FADE_DURATION));
+                visualGroup.scale.setScalar(1 + (Math.sin(fadeLerp * Math.PI)*0.15));
+                scene.background.copy(new THREE.Color(0xf5c542)).lerp(new THREE.Color(0x4b5bdc), fadeLerp);
+                material.color.copy(new THREE.Color(0x4b5bdc)).lerp(new THREE.Color(0xf5c542), fadeLerp);
 
                 if (elapsed >= SESSION_LIMIT - MICRO_HAUS_TRIGGER) {
-                    document.getElementById('microHausReveal').classList.remove('hidden');
-                    document.getElementById('microHausReveal').classList.add('show');
+                    microHausReveal.classList.remove('hidden'); microHausReveal.classList.add('show');
                 }
                 
                 if (elapsed >= SESSION_LIMIT) {
                     appState = 'END';
-                    document.getElementById('endNosReveal').classList.remove('hidden');
-                    document.getElementById('endNosReveal').classList.add('show');
-                    if (audioCtx) {
-                        whiteGain.gain.setTargetAtTime(0.0001, audioCtx.currentTime, 1.5);
-                        greyGain.gain.setTargetAtTime(0.0001, audioCtx.currentTime, 1.5);
-                        pinkGain.gain.setTargetAtTime(0.0001, audioCtx.currentTime, 1.5);
+                    if (!streakCounted) {
+                        let s = (parseInt(localStorage.getItem('SATA_Streak')) || 0) + 1;
+                        localStorage.setItem('SATA_Streak', s);
+                        document.getElementById('streakDisplay').textContent = `DAY ${s} OF 77`;
+                        streakCounted = true;
                     }
+                    endNosReveal.classList.remove('hidden'); endNosReveal.classList.add('show');
                 }
                 renderer.render(scene, camera);
             }
-
-            window.addEventListener('resize', () => {
-                camera.aspect = window.innerWidth / window.innerHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(window.innerWidth, window.innerHeight);
-            });
         });
     </script>
 </body>
