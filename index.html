@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SATA-CODA | Master</title>
+    <title>SATA-CODA | Master v7</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=6">
+    <link rel="stylesheet" href="style.css?v=7">
 </head>
 <body>
     <main id="mainUi" class="panel">
@@ -33,15 +33,32 @@
     </div>
 
     <canvas id="vesselCanvas"></canvas>
+    
     <div id="hud">
         <div>CALIBRATING // <span id="timer">11:00</span></div>
         <div id="timeBar"><div id="timeFill"></div></div>
     </div>
 
     <section id="endReveal" class="reveal">
+        <img src="micro-haus.png" alt="Micro Haus" class="fade-in-18s" style="max-width: 200px; margin-bottom: 15px;">
+        <img src="end-NOS.png" alt="End NOS Anchor" style="max-width: 80%; max-height: 25vh; margin-bottom: 10px;">
+        
         <h2 style="font-family: 'Montserrat', sans-serif; color: var(--gold);">CALIBRATION COMPLETE</h2>
         <div id="streakDisplay" style="font-size: 1.5rem; color: var(--gold);">DAY 1 OF 77</div>
-        <button onclick="location.reload()" class="btn btn-secondary" style="margin-top:20px;">RETURN TO LOBBY</button>
+        
+        <button id="openFormBtn" class="btn btn-primary" style="margin-top: 15px;">CLAIM YOUR GIFT</button>
+        <button onclick="location.reload()" class="btn btn-secondary" style="margin-top:15px;">RETURN TO SATA-CODA CALIBRATION</button>
+    </section>
+
+    <section id="formReveal" class="reveal">
+        <h2 style="font-family: 'Montserrat', sans-serif; color: var(--gold); margin-bottom: 20px;">GIFT REGISTRATION</h2>
+        <form class="contact-form" action="https://formspree.io/f/maqavpez" method="POST" style="display: flex; flex-direction: column; gap: 15px; width: 100%; max-width: 350px;">
+            <input type="text" name="Name" placeholder="Full Name" required style="padding: 15px; background: rgba(255,255,255,0.05); border: 1px solid var(--indigo); color: #fff;">
+            <input type="email" name="Email" placeholder="Email Address" required style="padding: 15px; background: rgba(255,255,255,0.05); border: 1px solid var(--indigo); color: #fff;">
+            <input type="text" name="Address" placeholder="Mailing Address" required style="padding: 15px; background: rgba(255,255,255,0.05); border: 1px solid var(--indigo); color: #fff;">
+            <button type="submit" class="btn btn-primary">SUBMIT PROOF</button>
+        </form>
+        <button id="closeFormBtn" style="background:none; border:none; color:rgba(255,255,255,0.4); margin-top:20px; cursor:pointer;">CANCEL</button>
     </section>
 
     <footer class="disclaimerFooter">
@@ -50,6 +67,6 @@
     </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="script.js?v=6"></script>
+    <script src="script.js?v=7"></script>
 </body>
 </html>
