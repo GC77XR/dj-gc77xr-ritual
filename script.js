@@ -11,39 +11,64 @@ const hud = document.getElementById('hud');
 const timerText = document.getElementById('timer');
 const timeFill = document.getElementById('timeFill');
 
-let audioCtx, masterGain, osc1, osc2;
+let audioCtx, masterGain, sataOsc, sataGain, pinkGain, pinkFilter;
 
-// Smooth Audio Strategy
 function initAudio() {
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     masterGain = audioCtx.createGain();
-    
-    // Smooth fade in
     masterGain.gain.setValueAtTime(0, audioCtx.currentTime);
-    masterGain.gain.linearRampToValueAtTime(0.5, audioCtx.currentTime + 2);
+    masterGain.gain.linearRampToValueAtTime(0.8, audioCtx.currentTime + 3);
     masterGain.connect(audioCtx.destination);
     
-    // Create a deep, smooth drone instead of harsh static
-    osc1 = audioCtx.createOscillator();
-    osc1.type = 'sine';
-    osc1.frequency.value = 110; // Low frequency hum
+    // SATA Phase: Grounding 136.1 Hz Drone
+    sataOsc = audioCtx.createOscillator();
+    sataOsc.type = 'sine';
+    sataOsc.frequency.value = 136.1; 
     
-    osc2 = audioCtx.createOscillator();
-    osc2.type = 'sine';
-    osc2.frequency.value = 114; // Slight offset for a pulse effect
+    sataGain = audioCtx.createGain();
+    sataGain.gain.value = 0.5; 
+    sataOsc.connect(sataGain).connect(masterGain);
+    sataOsc.start();
+
+    // CODA Phase: Pink Noise Generation
+    const bufferSize = audioCtx.sampleRate * 2;
+    const pinkBuf = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+    const output = pinkBuf.getChannelData(0);
+    let b0=0, b1=0, b2=0, b3=0, b4=0, b5=0, b6=0;
     
-    osc1.connect(masterGain);
-    osc2.connect(masterGain);
+    for (let i = 0; i < bufferSize; i++) {
+        const white = Math.random() * 2 - 1;
+        b0 = 0.99886 * b0 + white * 0.0555179;
+        b1 = 0.99332 * b1 + white * 0.0750759;
+        b2 = 0.96900 * b2 + white * 0.1538520;
+        b3 = 0.86650 * b3 + white * 0.3104856;
+        b4 = 0.55000 * b4 + white * 0.5329522;
+        b5 = -0.7616 * b5 - white * 0.0168980;
+        output[i] = b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362;
+        output[i] *= 0.11; 
+        b6 = white * 0.115926;
+    }
     
-    osc1.start();
-    osc2.start();
+    const pinkSrc = audioCtx.createBufferSource();
+    pinkSrc.buffer = pinkBuf;
+    pinkSrc.loop = true;
+    
+    pinkFilter = audioCtx.createBiquadFilter();
+    pinkFilter.type = 'lowpass';
+    pinkFilter.frequency.value = 50; 
+    
+    pinkGain = audioCtx.createGain();
+    pinkGain.gain.value = 0; 
+    
+    pinkSrc.connect(pinkFilter).connect(pinkGain).connect(masterGain);
+    pinkSrc.start();
 
     if (audioCtx.state === 'suspended') {
         audioCtx.resume();
     }
 }
 
-// Video Logic
+// Briefing Video Logic
 briefingBtn.onclick = () => { 
     videoContainer.classList.remove('hidden'); 
     video.play(); 
@@ -53,7 +78,7 @@ video.onended = () => {
     videoContainer.classList.add('hidden'); 
 };
 
-// Calibration Logic
+// Start Calibration Logic
 startBtn.onclick = () => {
     if (!audioCtx) initAudio();
     if (audioCtx.state === 'suspended') audioCtx.resume();
@@ -71,15 +96,17 @@ function startCalibration() {
     const renderer = new THREE.WebGLRenderer({ canvas: vesselCanvas, antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight); 
     camera.position.z = 5;
-    scene.background = new THREE.Color(0x05070f);
-
-    const material = new THREE.MeshBasicMaterial({ color: 0x4b5bdc });
+    
+    // Initial Colors: Gold background, Indigo rings
+    scene.background = new THREE.Color(0xd4af37); 
+    const material = new THREE.MeshBasicMaterial({ color: 0x4b5bdc, wireframe: true }); 
     const group = new THREE.Group();
     
-    group.add(new THREE.Mesh(new THREE.CircleGeometry(0.08, 32), material));
+    // 3D Gyroscope Setup
     for(let i = 1; i <= 4; i++) {
-        const r = new THREE.Mesh(new THREE.RingGeometry(i * 0.4, i * 0.42, 64), material);
-        group.add(r);
+        const torus = new THREE.Mesh(new THREE.TorusGeometry(i * 0.6, 0.05, 16, 100), material);
+        torus.rotation.x = Math.random() * Math.PI; 
+        group.add(torus);
     }
     scene.add(group);
 
@@ -89,7 +116,10 @@ function startCalibration() {
         let elapsed = Date.now() - startTime;
         let pct = Math.min(elapsed / SESSION_LIMIT, 1);
 
-        group.children.forEach((r, i) => { if(i > 0) r.rotation.z += 0.005 * i; });
+        group.children.forEach((r, i) => { 
+            r.rotation.x += 0.002 * (i + 1);
+            r.rotation.y += 0.003 * (i + 1);
+        });
         
         const rem = Math.max(0, SESSION_LIMIT - elapsed);
         const mins = Math.floor(rem / 60000);
@@ -97,10 +127,20 @@ function startCalibration() {
         timerText.textContent = `${mins}:${secs}`;
         timeFill.style.width = (pct * 100) + "%";
 
-        // Color transition at 5:55
-        if (pct > MARK_555) {
-            scene.background.lerp(new THREE.Color(0xf5c542), 0.01);
-            material.color.lerp(new THREE.Color(0xff8a1e), 0.01);
+        // Color and Audio Transition Logic
+        if (pct <= MARK_555) {
+            sataGain.gain.value = 0.5;
+            pinkGain.gain.value = 0;
+        } else {
+            let codaPct = (pct - MARK_555) / (1 - MARK_555);
+            
+            sataGain.gain.value = 0.5 * (1 - codaPct);
+            pinkGain.gain.value = 0.8 * codaPct;
+            
+            pinkFilter.frequency.value = 50 + (3500 * codaPct);
+            
+            scene.background.lerp(new THREE.Color(0x05070f), 0.01);
+            material.color.lerp(new THREE.Color(0xd4af37), 0.01);
         }
 
         if (pct >= 1) { 
@@ -113,4 +153,24 @@ function startCalibration() {
         renderer.render(scene, camera);
     }
     animate();
+}
+
+// Form Navigation Logic
+const openFormBtn = document.getElementById('openFormBtn');
+const closeFormBtn = document.getElementById('closeFormBtn');
+const endReveal = document.getElementById('endReveal');
+const formReveal = document.getElementById('formReveal');
+
+if (openFormBtn) {
+    openFormBtn.onclick = () => {
+        endReveal.classList.remove('show');
+        formReveal.classList.add('show');
+    };
+}
+
+if (closeFormBtn) {
+    closeFormBtn.onclick = () => {
+        formReveal.classList.remove('show');
+        endReveal.classList.add('show');
+    };
 }
