@@ -1,31 +1,33 @@
-/* output/style.css */
-* { box-sizing: border-box; }
-:root { --bg:#05070f; --indigo:#4b5bdc; --gold:#f5c542; --fire:#ff8a1e; --text:#f4f7ff; --muted:rgba(244,247,255,.72); }
-html, body { width:100%; height:100%; margin:0; overflow:hidden; color:var(--text); font-family:'Space Grotesk', system-ui, sans-serif; }
-body { position:relative; background:radial-gradient(circle at top, #11183a 0%, var(--bg) 56%); }
-#vesselCanvas { position:fixed; inset:0; width:100%; height:100%; z-index:0; }
-.hidden { display:none !important; }
-.panel { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; text-align:center; padding:24px; z-index:2; }
-.branding { display:flex; flex-direction:column; align-items:center; gap:6px; margin-bottom:6px; }
-.presentedBy { font-size:.8rem; letter-spacing:.34em; text-transform:uppercase; color:var(--muted); }
-.artistName { font-family:'Cinzel', serif; font-size:clamp(1.9rem, 4vw, 3rem); letter-spacing:.24em; color:#f1ecff; text-transform:uppercase; }
-.calibrationLabel { font-family:'Archivo Black', sans-serif; font-size:clamp(1.1rem, 2.2vw, 1.6rem); letter-spacing:.2em; text-transform:uppercase; color:var(--indigo); }
-.startButton { min-width:min(72vw, 360px); padding:18px 26px; border:1px solid rgba(255,255,255,.14); border-radius:18px; cursor:pointer; font-family:'Archivo Black', sans-serif; letter-spacing:.18em; text-transform:uppercase; font-size:1rem; color:white; background:linear-gradient(135deg, rgba(75,91,220,.94), rgba(143,91,255,.96)); box-shadow:0 18px 50px rgba(75,91,220,.26), inset 0 1px 0 rgba(255,255,255,.16); transition:transform .18s ease, box-shadow .3s ease, filter .3s ease, background .6s ease; }
-.startButton:hover { transform:translateY(-1px); filter:brightness(1.05); box-shadow:0 22px 58px rgba(75,91,220,.34), inset 0 1px 0 rgba(255,255,255,.2); }
-.startButton:active { transform:translateY(1px) scale(.99); }
-.giftLink { margin-top:-4px; font-size:.82rem; letter-spacing:.3em; text-transform:uppercase; color:var(--gold); text-decoration:underline; text-underline-offset:6px; }
-#hud { position:absolute; top:16px; left:0; width:100%; padding:0 18px; z-index:4; color:rgba(255,248,223,.88); }
-#statusLine { text-align:center; letter-spacing:.2em; font-size:.8rem; text-transform:uppercase; margin-bottom:10px; }
-#timeBar { height:12px; border-radius:999px; background:rgba(255,255,255,.09); overflow:hidden; box-shadow:inset 0 0 0 1px rgba(255,255,255,.07); }
-#timeFill { width:0%; height:100%; border-radius:inherit; background:linear-gradient(90deg, var(--indigo) 0%, #8f5bff 42%, var(--gold) 100%); transition:width .1s linear, background .3s linear; }
-.disclaimer { margin-top:6px; width:min(90vw, 680px); padding:12px 16px; border-radius:16px; background:rgba(255,255,255,.035); border:1px solid rgba(255,255,255,.06); color:rgba(255,255,255,.7); font-size:.8rem; letter-spacing:.22em; text-transform:uppercase; }
-.reveal { position:absolute; inset:0; z-index:5; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; background:rgba(2,4,8,.62); backdrop-filter:blur(4px); opacity:0; pointer-events:none; transition:opacity 1.4s ease; }
-.reveal.show { opacity:1; pointer-events:auto; }
-.revealLabel { font-family:'Cinzel', serif; letter-spacing:.35em; font-size:.95rem; color:var(--indigo); text-transform:uppercase; }
-.reveal img { width:min(78vw, 560px); height:auto; max-height:58vh; object-fit:contain; filter:drop-shadow(0 0 22px rgba(75,91,220,.24)); }
-.revealText { color:rgba(255,248,223,.9); text-transform:uppercase; letter-spacing:.2em; font-size:.78rem; text-align:center; padding:0 16px; }
-#resetButton { border:1px solid rgba(255,255,255,.18); background:linear-gradient(135deg, rgba(75,91,220,.9), rgba(143,91,255,.95)); color:white; padding:14px 18px; border-radius:14px; font-family:inherit; font-weight:700; letter-spacing:.16em; text-transform:uppercase; cursor:pointer; }
-body.is-active #brandingContainer { position:fixed; right:18px; bottom:18px; transform:scale(.72); opacity:.72; align-items:flex-end; text-align:right; }
-body.is-active .startButton, body.is-active .giftLink { opacity:0; pointer-events:none; }
-body.is-active .disclaimer { opacity:0; pointer-events:none; }
-@media (max-width:640px) { .panel { gap:14px; } .artistName { font-size:1.7rem; } .calibrationLabel { font-size:1rem; } }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root { --indigo: #4b5bdc; --gold: #d4af37; --fire: #ff8a1e; --bg: #05070f; }
+body { background: var(--bg); color: #fff; font-family: 'Space Grotesk', sans-serif; min-height: 100vh; overflow-x: hidden; }
+#vesselCanvas { position: fixed; inset: 0; z-index: 0; display: none; }
+.hidden { display: none !important; }
+
+/* Main UI Layout - Using min-height to fix S26 cutoff */
+.panel { position: relative; z-index: 2; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 40px 20px 100px; text-align: center; gap: 20px; }
+
+/* Typography */
+#vesselTitle { font-family: 'Montserrat', sans-serif; font-size: clamp(1.8rem, 5vw, 2.5rem); letter-spacing: 6px; color: var(--gold); }
+.subtitle-text { color: var(--indigo); letter-spacing: 4px; font-weight: 700; text-transform: uppercase; font-size: clamp(0.9rem, 3vw, 1.1rem); }
+.mantra-main { font-family: 'Montserrat', sans-serif; font-size: clamp(1.1rem, 4vw, 1.3rem); line-height: 1.6; max-width: 600px; margin: 0 auto; }
+.highlight { color: var(--gold); font-weight: 900; }
+.embark-text { font-size: clamp(1.1rem, 4vw, 1.3rem); color: var(--indigo); font-weight: 700; text-transform: uppercase; margin-top: 15px; letter-spacing: 1px; }
+
+/* Buttons */
+#actionArea { display: flex; flex-direction: column; align-items: center; gap: 15px; width: 100%; margin-top: 20px; }
+.btn { padding: 18px; font-size: 1rem; font-weight: bold; letter-spacing: 3px; cursor: pointer; border-radius: 4px; width: 90%; max-width: 350px; font-family: 'Montserrat', sans-serif; border: none; transition: 0.3s; }
+.btn-primary { background: var(--gold); color: #000; }
+.btn-secondary { background: transparent; border: 2px solid var(--gold); color: var(--gold); }
+
+/* Video and HUD */
+#videoContainer { position: fixed; inset: 0; z-index: 100; background: #000; display: flex; align-items: center; justify-content: center; }
+video { width: 100%; max-height: 100vh; }
+#hud { position: fixed; top: 20px; width: 100%; z-index: 5; text-align: center; font-size: 0.9rem; letter-spacing: 2px; display: none; }
+#timeBar { width: 80%; height: 6px; background: rgba(255,255,255,0.1); margin: 10px auto; border-radius: 3px; overflow: hidden; }
+#timeFill { height: 100%; width: 0%; background: var(--indigo); }
+
+/* End Screen and Footer */
+.reveal { position: fixed; inset: 0; z-index: 10; background: rgba(5,7,15,0.98); display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transition: 0.8s; pointer-events: none; padding: 20px; gap: 20px; }
+.reveal.show { opacity: 1; pointer-events: auto; }
+.disclaimerFooter { position: fixed; bottom: 0; width: 100%; padding: 15px; background: rgba(0,0,0,0.85); text-align: center; font-size: 0.7rem; color: rgba(255,255,255,0.4); z-index: 10; }
