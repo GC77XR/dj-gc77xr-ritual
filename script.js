@@ -46,7 +46,7 @@ function startCalibration() {
         renderer.setSize(window.innerWidth, window.innerHeight);
     });
     
-    // 🎨 SATA Phase: Gold Background, Indigo Rings
+    // 🎨 SATA Phase: Gold Background (0xd4af37), Blue Rings (0x4b5bdc)
     scene.background = new THREE.Color(0xd4af37); 
     const material = new THREE.MeshBasicMaterial({ color: 0x4b5bdc, wireframe: true }); 
     const group = new THREE.Group();
@@ -70,11 +70,10 @@ function startCalibration() {
         timeFill.style.width = (pct * 100) + "%";
 
         if (pct <= MARK_555) {
-            // 🧘‍♂️ SATA: Grounding & Breathing (Slow Z-axis turn, pulsing scale)
+            // 🧘‍♂️ SATA: Grounding & Breathing 
             group.children.forEach((r, i) => { 
                 r.rotation.z += 0.001 * (i + 1); 
             });
-            // Pulsing breath effect
             let breath = 1 + Math.sin(elapsed * 0.0008) * 0.08;
             group.scale.set(breath, breath, breath);
 
@@ -89,11 +88,10 @@ function startCalibration() {
                 r.rotation.y += 0.003 * (i + 1);
                 r.rotation.z += 0.002 * (i + 1);
             });
-            // Smoothly return scale to normal
             group.scale.lerp(new THREE.Vector3(1, 1, 1), 0.05);
 
-            // Shift to CODA Colors: Indigo Background, Gold Rings
-            scene.background.lerp(new THREE.Color(0x05070f), 0.01);
+            // 🎨 Shift to CODA Colors: BLUE Background (0x4b5bdc), GOLD Rings (0xd4af37)
+            scene.background.lerp(new THREE.Color(0x4b5bdc), 0.01);
             material.color.lerp(new THREE.Color(0xd4af37), 0.01);
         }
 
@@ -118,7 +116,6 @@ function startCalibration() {
 
 // Form Navigation Logic
 const openFormBtn = document.getElementById('openFormBtn');
-const closeFormBtn = document.getElementById('closeFormBtn');
 const endReveal = document.getElementById('endReveal');
 const formReveal = document.getElementById('formReveal');
 
@@ -126,12 +123,5 @@ if (openFormBtn) {
     openFormBtn.onclick = () => {
         endReveal.classList.remove('show');
         formReveal.classList.add('show');
-    };
-}
-
-if (closeFormBtn) {
-    closeFormBtn.onclick = () => {
-        formReveal.classList.remove('show');
-        endReveal.classList.add('show');
     };
 }
