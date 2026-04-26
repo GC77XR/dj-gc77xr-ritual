@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SATA-CODA | Master v8</title>
+    <title>SATA-CODA | Master v10</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=8">
+    <link rel="stylesheet" href="style.css?v=10">
 </head>
 <body>
     <main id="mainUi" class="panel">
@@ -34,18 +34,17 @@
 
     <canvas id="vesselCanvas"></canvas>
     
+    <img id="microHausOverlay" src="micro-haus.png" alt="Micro Haus" style="position:fixed; top:45%; left:50%; transform:translate(-50%, -50%); max-width: 250px; z-index: 4; opacity: 0; pointer-events: none; display: none;">
+
     <div id="hud">
         <div>CALIBRATING // <span id="timer">11:00</span></div>
         <div id="timeBar"><div id="timeFill"></div></div>
     </div>
 
     <section id="endReveal" class="reveal">
-        <img src="micro-haus.png" alt="Micro Haus" class="fade-in-18s" style="max-width: 200px; margin-bottom: 15px;">
         <img src="end-NOS.png" alt="End NOS Anchor" style="max-width: 80%; max-height: 25vh; margin-bottom: 10px;">
-        
         <h2 style="font-family: 'Montserrat', sans-serif; color: var(--gold);">CALIBRATION COMPLETE</h2>
         <div id="streakDisplay" style="font-size: 1.5rem; color: var(--gold);">DAY 1 OF 77</div>
-        
         <button id="openFormBtn" class="btn btn-primary" style="margin-top: 15px;">CLAIM YOUR GIFT</button>
         <button onclick="location.reload()" class="btn btn-secondary" style="margin-top:15px;">RETURN TO SATA-CODA CALIBRATION</button>
     </section>
@@ -67,6 +66,6 @@
     </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="script.js?v=8"></script>
+    <script src="script.js?v=10"></script>
 </body>
 </html>
