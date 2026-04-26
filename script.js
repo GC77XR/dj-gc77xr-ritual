@@ -14,10 +14,12 @@ const overlayLogo = document.getElementById('microHausOverlay');
 
 const ritualAudio = new Audio('sata-coda-master.mp3');
 
-briefingBtn.onclick = () => { 
-    videoContainer.classList.remove('hidden'); 
-    video.play(); 
-};
+if (briefingBtn) {
+    briefingBtn.onclick = () => { 
+        videoContainer.classList.remove('hidden'); 
+        video.play(); 
+    };
+}
 
 video.onended = () => { 
     videoContainer.classList.add('hidden'); 
@@ -28,7 +30,7 @@ startBtn.onclick = () => {
     
     mainUi.style.display = 'none';
     vesselCanvas.style.display = 'block';
-    hud.style.display = 'block';
+    hud.style.display = 'block'; 
     
     startCalibration();
 };
@@ -46,7 +48,6 @@ function startCalibration() {
         renderer.setSize(window.innerWidth, window.innerHeight);
     });
     
-    // 🎨 SATA Phase: Gold Background (0xd4af37), Blue Rings (0x4b5bdc)
     scene.background = new THREE.Color(0xd4af37); 
     const material = new THREE.MeshBasicMaterial({ color: 0x4b5bdc, wireframe: true }); 
     const group = new THREE.Group();
@@ -70,19 +71,16 @@ function startCalibration() {
         timeFill.style.width = (pct * 100) + "%";
 
         if (pct <= MARK_555) {
-            // 🧘‍♂️ SATA: Grounding & Breathing 
             group.children.forEach((r, i) => { 
                 r.rotation.z += 0.001 * (i + 1); 
             });
             let breath = 1 + Math.sin(elapsed * 0.0008) * 0.08;
             group.scale.set(breath, breath, breath);
 
-            // Lock SATA Colors
             scene.background.copy(new THREE.Color(0xd4af37));
             material.color.copy(new THREE.Color(0x4b5bdc));
             
         } else {
-            // 🔥 CODA: Ignition (Complex 3D Gyroscope rotation)
             group.children.forEach((r, i) => { 
                 r.rotation.x += 0.002 * (i + 1);
                 r.rotation.y += 0.003 * (i + 1);
@@ -90,12 +88,10 @@ function startCalibration() {
             });
             group.scale.lerp(new THREE.Vector3(1, 1, 1), 0.05);
 
-            // 🎨 Shift to CODA Colors: BLUE Background (0x4b5bdc), GOLD Rings (0xd4af37)
             scene.background.lerp(new THREE.Color(0x4b5bdc), 0.01);
             material.color.lerp(new THREE.Color(0xd4af37), 0.01);
         }
 
-        // ⏱️ Final 18 Seconds: Fade in the Micro Haus Logo over the rings
         if (rem <= 18000) {
             overlayLogo.style.display = 'block';
             overlayLogo.style.opacity = 1 - (rem / 18000);
@@ -114,7 +110,6 @@ function startCalibration() {
     animate();
 }
 
-// Form Navigation Logic
 const openFormBtn = document.getElementById('openFormBtn');
 const endReveal = document.getElementById('endReveal');
 const formReveal = document.getElementById('formReveal');
